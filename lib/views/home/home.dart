@@ -18,6 +18,7 @@ class _HomeState extends State<Home> {
 
   Future<void> initUsage() async {
     UsageStats.grantUsagePermission();
+    
     DateTime endDate = new DateTime.now();
     DateTime startDate = DateTime(endDate.year, endDate.month, 26, 13, 58, 0);
     List<EventUsageInfo> queryEvents =
