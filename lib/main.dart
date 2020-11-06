@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wellbeing_app/views/wrapper.dart';
+import 'package:wellbeing_app/screens/wrapper.dart';
 
 void main() {
   runApp(MyApp());

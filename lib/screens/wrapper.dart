@@ -1,8 +1,9 @@
 
 import 'package:flutter/material.dart';
-import 'package:wellbeing_app/views/home/home.dart';
-import 'package:wellbeing_app/views/settings/settings.dart';
-import 'package:wellbeing_app/views/timer/timer.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:wellbeing_app/screens/home/home.dart';
+import 'package:wellbeing_app/screens/settings/settings.dart';
+import 'package:wellbeing_app/screens/timer/timer.dart';
 
 class Wrapper extends StatefulWidget {
   @override
@@ -18,6 +19,11 @@ class _WrapperState extends State<Wrapper> {
     Settings(),
   ];
 
+  void initState() {
+    storage.readCounter();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +34,7 @@ class _WrapperState extends State<Wrapper> {
         actions: [
           FlatButton.icon(
             onPressed: null,
-            icon: Icon(Icons.attach_money),
+            icon: FaIcon(FontAwesomeIcons.coins),
             label: Text('24'),
           )
         ],
