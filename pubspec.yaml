@@ -38,6 +38,9 @@ dependencies:
   flutter_local_notifications: ^3.0.1+2
   rxdart: ^0.23.1
 
+  #Picker allows for custom modals with better range and styling with easier implementation. It is used for the duration selector in settings.
+  flutter_picker: ^1.1.5
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

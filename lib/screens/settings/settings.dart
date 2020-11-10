@@ -3,6 +3,8 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'package:wellbeing_app/controllers/global.dart';
+import 'package:flutter_picker/flutter_picker.dart';
+import 'package:wellbeing_app/models/apps.dart';
 
 final CounterStorage storage = CounterStorage();
 
@@ -21,27 +23,62 @@ class _SettingsState extends State<Settings> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView.builder(
-          itemCount: apps.length,
-          itemBuilder: (context, index) {
-            return ListTile(
-                title: Text(apps[index]["name"]),
-                trailing: Switch(
-                  value: apps[index]["monitor"],
-                  onChanged: (value) {
-                  setState(() {
-                    apps[index]["monitor"] = value;
-                  }
-                );
-                storage.writeCounter(jsonEncode(apps));
-                },
-              )
-            );
-          }
-      ),
+      body: Column(
+              children: [
+                for (var i = 0; i < apps.length; i += 1)
+                  Row(
+                    children: [
+                      Checkbox(
+                        onChanged: (bool value) {
+                            setState(() {
+                              apps[i]["monitor"] = value;
+                            });
+                          storage.writeCounter(jsonEncode(apps));
+                        },
+                        value: apps[i]["monitor"],
+                        activeColor: Color(0xFF6200EE),
+                      ),
+                      Text(apps[i]["name"]),
+                      TextButton(
+                        onPressed: () => onTap(i), 
+                      child: Text("Set a time limit")
+                      )
+                    ],
+                  ),
+              ],
+      )
     );
   }
+  
+  void onTap(index) {
+  Picker(
+    adapter: NumberPickerAdapter(data: <NumberPickerColumn>[
+      const NumberPickerColumn(begin: 0, end: 5, suffix: Text(' hours')),
+      const NumberPickerColumn(begin: 0, end: 45, suffix: Text(' minutes'), jump: 5),
+    ]),
+    delimiter: <PickerDelimiter>[
+      PickerDelimiter(
+        child: Container(
+          width: 30.0,
+          alignment: Alignment.center,
+          child: Icon(Icons.more_vert),
+        ),
+      )
+    ],
+    hideHeader: true,
+    confirmText: 'OK',
+    confirmTextStyle: TextStyle(inherit: false, color: Colors.red, fontSize: 22),
+    title: const Text('Select duration'),
+    selectedTextStyle: TextStyle(color: Colors.blue),
+    onConfirm: (Picker picker, List<int> value) {
+      // You get your duration here
+      Duration _duration = Duration(hours: picker.getSelectedValues()[0], minutes: picker.getSelectedValues()[1]);
+    },
+  ).showDialog(context);
 }
+}
+
+
 
 class CounterStorage {
   Future<String> get _localPath async {
@@ -83,3 +120,4 @@ class CounterStorage {
     return file.writeAsString('$counter');
   }
 }
+
