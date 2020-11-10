@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:wellbeing_app/screens/wrapper.dart';
 
-void main() {
+import 'isolates/timer.dart';
+
+var timer = new CountdownTimer();
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await timer.start();
+  //Timer.main();
   runApp(MyApp());
 }
 
