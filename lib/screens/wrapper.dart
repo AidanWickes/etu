@@ -29,7 +29,7 @@ class _WrapperState extends State<Wrapper> {
     return Scaffold(
       appBar: AppBar(
         title: Text('etu'),
-        backgroundColor: Colors.lightBlue[300],
+        backgroundColor: Color(0xFF6200EE), //Colors.lightBlue[300],
         elevation: 0.0,
         actions: [
           FlatButton.icon(

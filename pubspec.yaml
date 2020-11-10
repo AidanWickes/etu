@@ -35,6 +35,9 @@ dependencies:
   shared_preferences: ^0.5.12
   path_provider: ^1.6.22
 
+  #Picker allows for custom modals with better range and styling with easier implementation. It is used for the duration selector in settings.
+  flutter_picker: ^1.1.5
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
