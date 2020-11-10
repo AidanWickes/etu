@@ -20,7 +20,7 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> initUsage() async {
-    // UsageStats.grantUsagePermission();
+    UsageStats.grantUsagePermission();
     // DateTime endDate = new DateTime.now();
     // DateTime startDate = endDate.subtract(new Duration(days: 1));
     // List<EventUsageInfo> queryEvents =
@@ -38,11 +38,13 @@ class _HomeState extends State<Home> {
         _infos.clear();
         infos.forEach((element) {
           apps.forEach((appElement) {
-            if (element.packageName == appElement["listName"] && appElement["monitor"]){
-              appElement["time"] =  element.usage.toString();
+            if (element.packageName == appElement["listName"] &&
+                appElement["monitor"]) {
+              appElement["time"] = element.usage.toString();
               return _infos.add(element);
-            } else if (appElement["listName"] == "youtube"){
-              if (element.appName == appElement["listName"] && appElement["monitor"]){
+            } else if (appElement["listName"] == "youtube") {
+              if (element.appName == appElement["listName"] &&
+                  appElement["monitor"]) {
                 appElement["time"] = element.usage.toString();
                 return _infos.add(element);
               }
@@ -64,7 +66,7 @@ class _HomeState extends State<Home> {
       body: ListView.builder(
           itemCount: apps.length,
           itemBuilder: (context, index) {
-            if (apps[index]["monitor"]){
+            if (apps[index]["monitor"]) {
               return ListTile(
                   title: Text(apps[index]["name"]),
                   trailing: Text(apps[index]["time"].toString()));
