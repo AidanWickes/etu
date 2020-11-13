@@ -36,7 +36,7 @@ class _SettingsState extends State<Settings> {
                           storage.writeCounter(jsonEncode(apps));
                         },
                         value: apps[i]["monitor"],
-                        activeColor: Color(0xFF6200EE),
+                        activeColor: Color(0xFF9FE79C),
                       ),
                       Text(apps[i]["name"]),
                       TextButton(
@@ -54,7 +54,7 @@ class _SettingsState extends State<Settings> {
   Picker(
     adapter: NumberPickerAdapter(data: <NumberPickerColumn>[
       const NumberPickerColumn(begin: 0, end: 5, suffix: Text(' hours')),
-      const NumberPickerColumn(begin: 0, end: 45, suffix: Text(' minutes'), jump: 5),
+      const NumberPickerColumn(begin: 0, end: 55, suffix: Text(' minutes'), jump: 5),
     ]),
     delimiter: <PickerDelimiter>[
       PickerDelimiter(

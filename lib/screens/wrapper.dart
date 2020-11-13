@@ -27,33 +27,74 @@ class _WrapperState extends State<Wrapper> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('etu'),
-        backgroundColor: Color(0xFF6200EE), //Colors.lightBlue[300],
+      appBar: PreferredSize(
+      preferredSize: Size.fromHeight(80.0),
+      child: AppBar(
+        title: Text(
+          'etu',
+          style: TextStyle(
+            color: Color(0xFF2CA5B5),
+            fontWeight: FontWeight.w500,
+            fontFamily: 'Quicksand',
+            fontSize: 40),
+          ),
+        backgroundColor: Color(0xFF083D77),
         elevation: 0.0,
         actions: [
+
+          Align(
+          alignment: Alignment.centerRight,
+          child: Container(
+            
+            width: 40, 
+            height: 40, 
+            color: Colors.red, 
+            
+            ),
+          ), 
+
           FlatButton.icon(
-            onPressed: null,
-            icon: FaIcon(FontAwesomeIcons.coins),
-            label: Text('24'),
+            shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(100.0),
+            side: BorderSide(color: Color(0xFF2CA5B5))),
+            color:Color(0xFF2CA5B5),
+            padding: EdgeInsets.all(10.0),
+            onPressed: () {},
+            icon: FaIcon(FontAwesomeIcons.coins, size: 20, color: Color(0xFFE8CE22)),
+            label: Text(
+            '24',
+            style: TextStyle(
+            color: Color(0xFFE8CE22),
+            fontWeight: FontWeight.w300,
+            fontFamily: 'Nunito',
+            fontSize: 25 )
+              ),
           )
         ],
+  )
+
       ),
       body: _children[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
+      backgroundColor: Color(0xFF083D77),
        onTap: onTabTapped,
+       showSelectedLabels: false, //hiding labels
+       showUnselectedLabels: false,
        currentIndex: _currentIndex, // this will be set when a new tab is tapped
        items: [
          BottomNavigationBarItem(
-              icon: Icon(Icons.timer),
+              icon: FaIcon(FontAwesomeIcons.solidClock, size: 35, color: Color(0xFF2CA5B5)),
+              activeIcon: FaIcon(FontAwesomeIcons.solidClock, size: 35, color: Color(0xFF9FE79C)),
               label: 'Timer',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
+              icon: Image.asset("assets/images/bubblesIcon.png", height:55),
+              activeIcon: Image.asset("assets/images/bubblesIconActive.png", height:55),
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.settings),
+              icon: FaIcon(FontAwesomeIcons.cog, size: 35, color: Color(0xFF2CA5B5)),
+              activeIcon: FaIcon(FontAwesomeIcons.cog, size: 35, color: Color(0xFF9FE79C)),
               label: 'Options',
             ),
        ],

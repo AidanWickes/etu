@@ -17,6 +17,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        fontFamily: 'Nunito',
+        textTheme: TextTheme(
+        bodyText2: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w300, color: Color(0xFF083D77)),
+          ),
+        ),
       home: Wrapper(),
     );
   }
