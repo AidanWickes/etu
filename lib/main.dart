@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wellbeing_app/screens/wrapper.dart';
-
-import 'isolates/timer.dart';
+import 'package:wellbeing_app/isolates/timer.dart';
 
 var timer = new CountdownTimer();
 
@@ -13,6 +12,7 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
