@@ -28,7 +28,7 @@ class _WrapperState extends State<Wrapper> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-      preferredSize: Size.fromHeight(80.0),
+      preferredSize: Size.fromHeight(60.0),
       child: AppBar(
         title: Text(
           'etu',
@@ -42,23 +42,12 @@ class _WrapperState extends State<Wrapper> {
         elevation: 0.0,
         actions: [
 
-          Align(
-          alignment: Alignment.centerRight,
-          child: Container(
-            
-            width: 40, 
-            height: 40, 
-            color: Colors.red, 
-            
-            ),
-          ), 
-
           FlatButton.icon(
-            shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(100.0),
-            side: BorderSide(color: Color(0xFF2CA5B5))),
-            color:Color(0xFF2CA5B5),
-            padding: EdgeInsets.all(10.0),
+            // shape: RoundedRectangleBorder(
+            // borderRadius: BorderRadius.circular(100.0),
+            // side: BorderSide(color: Color(0xFF2CA5B5))),
+            // color:Color(0xFF2CA5B5),
+            // padding: EdgeInsets.all(10.0),
             onPressed: () {},
             icon: FaIcon(FontAwesomeIcons.coins, size: 20, color: Color(0xFFE8CE22)),
             label: Text(
