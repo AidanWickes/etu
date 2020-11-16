@@ -17,17 +17,27 @@ class DonutPieChart extends StatelessWidget {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return new charts.PieChart(
+Stack(
+    children: <Widget>[
+     charts.PieChart(
       seriesList,
       animate: animate,
       defaultRenderer: new charts.ArcRendererConfig(
       arcWidth: 15,
     ),
-    );
-    
-  }
+    ),
+      Center(
+        child: Text(
+          "88%",
+          style: TextStyle(
+            fontSize: 30.0,
+            color: Colors.blue,
+            fontWeight: FontWeight.bold
+          ),
+        ),
+      )
+    ],
+);
   
 static List<charts.Series<Purchases, String>> _createPurchaseData() {
   final data = [
