@@ -33,7 +33,6 @@ class _SettingsTestState extends State<SettingsTest> {
                       currentObject.monitor = value;
                     });
                     currentObject.timeLimit = currentObject.timeLimit;
-                    //storage.writeCounter(jsonEncode(trackedApps));
                   },
                   value: currentObject.monitor,
                   activeColor: Color(0xFF6200EE),
@@ -83,8 +82,6 @@ class _SettingsTestState extends State<SettingsTest> {
               hours: picker.getSelectedValues()[0],
               minutes: picker.getSelectedValues()[1]);
         });
-
-        //storage.writeCounter(jsonEncode(trackedApps));
       },
     ).showDialog(context);
   }
