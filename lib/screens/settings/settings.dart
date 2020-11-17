@@ -54,14 +54,39 @@ class _SettingsState extends State<Settings> {
                       .padLeft(8, "0"))),
             ],
           ),
-        const Divider(
+        Divider(
           color: Colors.black,
           height: 20,
           thickness: 1,
           indent: 0,
           endIndent: 0,
         ),
-        TextButton(onPressed: () => SettingsTest(), child: Text("New Settings"))
+        //TextButton(onPressed: () => SettingsTest(), child: Text("New Settings")),
+        Row(
+          children: [
+            Expanded(child: Text("Timer lock")),
+            TextButton(onPressed: null, child: Text("5 days")),
+          ],
+        ),
+        Divider(
+          color: Colors.black,
+          height: 20,
+          thickness: 1,
+          indent: 0,
+          endIndent: 0,
+        ),
+        Row(
+          children: [
+            Expanded(child: Text("Notifications")),
+            Switch(value: null, onChanged: null)
+          ],
+        ),
+        Row(
+          children: [
+            Expanded(child: Text("Consequence & Reward")),
+            Switch(value: null, onChanged: null)
+          ],
+        ),
       ],
     ));
   }
