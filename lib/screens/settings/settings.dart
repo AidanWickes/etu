@@ -5,7 +5,7 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:wellbeing_app/controllers/global.dart';
 import 'package:flutter_picker/flutter_picker.dart';
-import 'package:wellbeing_app/screens/settings/settings%20copy.dart';
+//import 'package:wellbeing_app/screens/settings/settings%20copy.dart';
 
 final CounterStorage storage = CounterStorage();
 
