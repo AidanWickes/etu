@@ -1,8 +1,6 @@
-  
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:wellbeing_app/models/purchases.dart';
-
 
 class DonutPieChart extends StatelessWidget {
   final List<charts.Series> seriesList;
@@ -17,35 +15,38 @@ class DonutPieChart extends StatelessWidget {
     );
   }
 
-Stack(
-    children: <Widget>[
-     charts.PieChart(
-      seriesList,
-      animate: animate,
-      defaultRenderer: new charts.ArcRendererConfig(
-      arcWidth: 15,
-    ),
-    ),
-      Center(
-        child: Text(
-          "88%",
-          style: TextStyle(
-            fontSize: 30.0,
-            color: Colors.blue,
-            fontWeight: FontWeight.bold
+  //any visual widgets need a build context widget to be created and shown on screen
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: <Widget>[
+        charts.PieChart(
+          seriesList,
+          animate: animate,
+          defaultRenderer: new charts.ArcRendererConfig(
+            arcWidth: 15,
           ),
         ),
-      )
-    ],
-);
-  
-static List<charts.Series<Purchases, String>> _createPurchaseData() {
-  final data = [
-    new Purchases("Eating Out", 90, charts.Color(r: 8, g: 61, b: 119)),
-    new Purchases("Groceries", 75, charts.Color(r: 125, g: 131, b: 255)),
-    new Purchases("Shopping", 25, charts.Color(r: 44, g: 165, b: 181)),
-    new Purchases("Traveling", 15, charts.Color(r: 159, g: 231, b: 156)),
-  ];
+        Center(
+          child: Text(
+            "88%",
+            style: TextStyle(
+                fontSize: 30.0,
+                color: Colors.blue,
+                fontWeight: FontWeight.bold),
+          ),
+        )
+      ],
+    );
+  }
+
+  static List<charts.Series<Purchases, String>> _createPurchaseData() {
+    final data = [
+      new Purchases("Eating Out", 90, charts.Color(r: 8, g: 61, b: 119)),
+      new Purchases("Groceries", 75, charts.Color(r: 125, g: 131, b: 255)),
+      new Purchases("Shopping", 25, charts.Color(r: 44, g: 165, b: 181)),
+      new Purchases("Traveling", 15, charts.Color(r: 159, g: 231, b: 156)),
+    ];
 
     return [
       new charts.Series<Purchases, String>(
@@ -57,5 +58,4 @@ static List<charts.Series<Purchases, String>> _createPurchaseData() {
       )
     ];
   }
-
 }
