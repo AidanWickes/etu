@@ -5,16 +5,16 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:wellbeing_app/controllers/global.dart';
 import 'package:flutter_picker/flutter_picker.dart';
-import 'package:wellbeing_app/screens/settings/settings%20copy.dart';
+import 'package:wellbeing_app/models/apps.dart';
 
 final CounterStorage storage = CounterStorage();
 
-class Settings extends StatefulWidget {
+class SettingsTest extends StatefulWidget {
   @override
-  _SettingsState createState() => _SettingsState();
+  _SettingsTestState createState() => _SettingsTestState();
 }
 
-class _SettingsState extends State<Settings> {
+class _SettingsTestState extends State<SettingsTest> {
   @override
   void initState() {
     super.initState();
@@ -22,48 +22,36 @@ class _SettingsState extends State<Settings> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(
-      children: [
-        Row(
-          children: [
-            Text('Applications'),
-            Icon(FontAwesomeIcons.hourglass),
-          ],
-        ),
-        for (var i = 0; i < apps.length; i += 1)
-          Row(
-            children: [
-              Checkbox(
-                onChanged: (bool value) {
-                  setState(() {
-                    apps[i]["monitor"] = value;
-                  });
-                  apps[i]["timeLimit"] = apps[i]["timeLimit"].toString();
-                  storage.writeCounter(jsonEncode(apps));
-                },
-                value: apps[i]["monitor"],
-                activeColor: Color(0xFF6200EE),
-              ),
-              Expanded(child: Text(apps[i]["name"])),
-              TextButton(
-                  onPressed: () => onTap(i),
-                  child: Text(apps[i]["timeLimit"]
-                      .toString()
-                      .split('.')
-                      .first
-                      .padLeft(8, "0"))),
-            ],
-          ),
-        const Divider(
-          color: Colors.black,
-          height: 20,
-          thickness: 1,
-          indent: 0,
-          endIndent: 0,
-        ),
-        TextButton(onPressed: () => SettingsTest(), child: Text("New Settings"))
-      ],
-    ));
+      body: Column(
+        children: trackedApps.map((currentObject) {
+          return Container(
+            child: Row(
+              children: <Widget>[
+                Checkbox(
+                  onChanged: (bool value) {
+                    setState(() {
+                      currentObject.monitor = value;
+                    });
+                    currentObject.timeLimit = currentObject.timeLimit;
+                    //storage.writeCounter(jsonEncode(trackedApps));
+                  },
+                  value: currentObject.monitor,
+                  activeColor: Color(0xFF6200EE),
+                ),
+                Expanded(child: Text(currentObject.name)),
+                TextButton(
+                    onPressed: () => onTap(currentObject.id),
+                    child: Text(currentObject.timeLimit
+                        .toString()
+                        .split('.')
+                        .first
+                        .padLeft(8, "0"))),
+              ],
+            ),
+          );
+        }).toList(),
+      ),
+    );
   }
 
   void onTap(index) {
@@ -90,15 +78,13 @@ class _SettingsState extends State<Settings> {
       selectedTextStyle: TextStyle(color: Colors.blue),
       onConfirm: (Picker picker, List<int> value) {
         // You get your duration here
-
         setState(() {
-          apps[index]["timeLimit"] = Duration(
-                  hours: picker.getSelectedValues()[0],
-                  minutes: picker.getSelectedValues()[1])
-              .toString();
+          trackedApps[index].timeLimit = new Duration(
+              hours: picker.getSelectedValues()[0],
+              minutes: picker.getSelectedValues()[1]);
         });
 
-        storage.writeCounter(jsonEncode(apps));
+        //storage.writeCounter(jsonEncode(trackedApps));
       },
     ).showDialog(context);
   }

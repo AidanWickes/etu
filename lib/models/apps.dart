@@ -34,3 +34,26 @@ class Apps {
     return data;
   }
 }
+
+List<Apps> trackedApps = []
+  ..add(Apps(
+      id: 0,
+      name: "Instagram",
+      monitor: false,
+      listName: "instagram",
+      time: 0,
+      timeLimit: Duration(hours: 2, minutes: 5)))
+  ..add(Apps(
+      id: 1,
+      name: "Snapchat",
+      monitor: false,
+      listName: "snapchat",
+      time: 0,
+      timeLimit: Duration(hours: 2, minutes: 10)))
+  ..add(Apps(
+      id: 2,
+      name: "Youtube",
+      monitor: false,
+      listName: "youtube",
+      time: 0,
+      timeLimit: Duration(hours: 2, minutes: 15)));
