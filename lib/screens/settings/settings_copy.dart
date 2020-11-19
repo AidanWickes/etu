@@ -1,20 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:path_provider/path_provider.dart';
-import 'dart:io';
-import 'dart:convert';
-import 'package:wellbeing_app/controllers/global.dart';
 import 'package:flutter_picker/flutter_picker.dart';
 import 'package:wellbeing_app/models/apps.dart';
 
-final CounterStorage storage = CounterStorage();
-
-class SettingsTest extends StatefulWidget {
+class SettingsCopy extends StatefulWidget {
   @override
-  _SettingsTestState createState() => _SettingsTestState();
+  _SettingsCopyState createState() => _SettingsCopyState();
 }
 
-class _SettingsTestState extends State<SettingsTest> {
+class _SettingsCopyState extends State<SettingsCopy> {
   @override
   void initState() {
     super.initState();
@@ -23,7 +16,7 @@ class _SettingsTestState extends State<SettingsTest> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
-        children: trackedApps.map((currentObject) {
+        children: initialApps.map((currentObject) {
           return Container(
             child: Row(
               children: <Widget>[
@@ -78,52 +71,11 @@ class _SettingsTestState extends State<SettingsTest> {
       onConfirm: (Picker picker, List<int> value) {
         // You get your duration here
         setState(() {
-          trackedApps[index].timeLimit = new Duration(
+          initialApps[index].timeLimit = new Duration(
               hours: picker.getSelectedValues()[0],
               minutes: picker.getSelectedValues()[1]);
         });
       },
     ).showDialog(context);
-  }
-}
-
-class CounterStorage {
-  Future<String> get _localPath async {
-    final directory = await getApplicationDocumentsDirectory();
-
-    return directory.path;
-  }
-
-  Future<File> get _localFile async {
-    final path = await _localPath;
-    return File('$path/apps.json');
-  }
-
-  Future<List> readCounter() async {
-    try {
-      final file = await _localFile;
-
-      // Read the file
-      String contents = await file.readAsString();
-
-      var test = jsonDecode(contents);
-
-      //   apps = test;
-      var i = 0;
-      test.forEach((element) {
-        apps[i] = element;
-        i++;
-      });
-      return test;
-    } catch (e) {
-      // If encountering an error, return 0
-      return [];
-    }
-  }
-
-  Future<File> writeCounter(counter) async {
-    final file = await _localFile;
-    // Write the file
-    return file.writeAsString('$counter');
   }
 }
