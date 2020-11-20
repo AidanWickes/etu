@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:wellbeing_app/screens/home/home.dart';
 import 'package:wellbeing_app/screens/settings/settings.dart';
-import 'package:wellbeing_app/screens/settings/exp_tracked_apps/settings_test.dart';
+import 'package:wellbeing_app/screens/settings/settings_copy.dart';
 import 'package:wellbeing_app/screens/timer/timer.dart';
 
 class Wrapper extends StatefulWidget {
@@ -15,7 +15,7 @@ class _WrapperState extends State<Wrapper> {
   final List<Widget> _children = [
     Timer(),
     Home(),
-    SettingsTest(),
+    SettingsCopy(),
   ];
 
   void initState() {
