@@ -5,6 +5,7 @@ var apps = [
     "listName": "facebook",
     "time": 0,
     "timeLimit": Duration(hours: 0, minutes: 0),
+    "sessions": []
   },
   {
     "name": "Instagram",
@@ -12,6 +13,7 @@ var apps = [
     "listName": "instagram",
     "time": 0,
     "timeLimit": Duration(hours: 0, minutes: 0),
+    "sessions": []
   },
   {
     "name": "Reddit",
@@ -19,6 +21,7 @@ var apps = [
     "listName": "reddit",
     "time": 0,
     "timeLimit": Duration(hours: 0, minutes: 0),
+    "sessions": []
   },
   {
     "name": "Snapchat",
@@ -26,6 +29,7 @@ var apps = [
     "listName": "snapchat",
     "time": 0,
     "timeLimit": Duration(hours: 0, minutes: 0),
+    "sessions": []
   },
   {
     "name": "Tik Tok",
@@ -33,6 +37,7 @@ var apps = [
     "listName": "tiktok",
     "time": 0,
     "timeLimit": Duration(hours: 0, minutes: 0),
+    "sessions": []
   },
   {
     "name": "Youtube",
@@ -40,5 +45,6 @@ var apps = [
     "listName": "youtube",
     "time": 0,
     "timeLimit": Duration(hours: 0, minutes: 0),
+    "sessions": []
   }
 ];
