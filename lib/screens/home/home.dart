@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:usage_stats/usage_stats.dart';
 import 'package:app_usage/app_usage.dart';
 import 'package:wellbeing_app/controllers/global.dart';
+import 'package:wellbeing_app/controllers/storage.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -12,6 +15,8 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   List<EventUsageInfo> events = [];
   List<AppUsageInfo> _infos = [];
+
+  var storage = new CounterStorage();
 
   @override
   void initState() {
@@ -32,7 +37,8 @@ class _HomeState extends State<Home> {
 
     try {
       DateTime endDate = DateTime.now();
-      DateTime startDate = endDate.subtract(new Duration(days: 1));
+      DateTime startDate = endDate
+          .subtract(new Duration(hours: endDate.hour, minutes: endDate.minute));
       List<AppUsageInfo> infos = await AppUsage.getAppUsage(startDate, endDate);
       setState(() {
         _infos.clear();
@@ -41,11 +47,13 @@ class _HomeState extends State<Home> {
             if (element.packageName == appElement["listName"] &&
                 appElement["monitor"]) {
               appElement["time"] = element.usage.toString();
+              storage.writeCounter(jsonEncode(apps));
               return _infos.add(element);
             } else if (appElement["listName"] == "youtube") {
               if (element.appName == appElement["listName"] &&
                   appElement["monitor"]) {
                 appElement["time"] = element.usage.toString();
+                storage.writeCounter(jsonEncode(apps));
                 return _infos.add(element);
               }
             }

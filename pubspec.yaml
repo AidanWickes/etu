@@ -29,14 +29,18 @@ dependencies:
   cupertino_icons: ^1.0.0
   font_awesome_flutter: ^8.10.0
   # Custom dependencies
+  #app usage details
   app_usage: ^1.0.1
-  permission_handler: ^5.0.1+1
   usage_stats: ^0.1.0
+  #permission dependency for tracking app opening
+  permission_handler: ^5.0.1+1
   shared_preferences: ^0.5.12
   path_provider: ^1.6.22
   isolate_handler: ^0.3.1
   flutter_local_notifications: ^3.0.1+2
   rxdart: ^0.23.1
+  #floating collision field
+  slowly_moving_widgets_field: ^0.1.2
   charts_flutter: ^0.9.0
 
   #Picker allows for custom modals with better range and styling with easier implementation. It is used for the duration selector in settings.
@@ -51,7 +55,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
-  
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -65,8 +68,6 @@ flutter:
   assets:
     - assets/images/bubblesIcon.png
     - assets/images/bubblesIconActive.png
-  
-
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
@@ -74,12 +75,11 @@ flutter:
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/assets-and-images/#from-packages
 
-
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
-  # example:  
+  # example:
 
   fonts:
     - family: Quicksand
@@ -98,7 +98,6 @@ flutter:
           weight: 300
         - asset: assets/fonts/Nunito-SemiBold.ttf
           weight: 500
-  
-  
+
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
