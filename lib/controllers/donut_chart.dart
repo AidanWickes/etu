@@ -29,11 +29,11 @@ class DonutPieChart extends StatelessWidget {
         ),
         Center(
           child: Text(
-            "88%",
+            "Today",
             style: TextStyle(
-                fontSize: 30.0,
-                color: Colors.blue,
-                fontWeight: FontWeight.bold),
+              fontFamily: 'Quicksand',
+                fontSize: 50.0,
+                fontWeight: FontWeight.w500),
           ),
         )
       ],
@@ -42,10 +42,10 @@ class DonutPieChart extends StatelessWidget {
 
   static List<charts.Series<Purchases, String>> _createPurchaseData() {
     final data = [
-      new Purchases("Eating Out", 90, charts.Color(r: 8, g: 61, b: 119)),
-      new Purchases("Groceries", 75, charts.Color(r: 125, g: 131, b: 255)),
-      new Purchases("Shopping", 25, charts.Color(r: 44, g: 165, b: 181)),
-      new Purchases("Traveling", 15, charts.Color(r: 159, g: 231, b: 156)),
+      new Purchases("Instagram", 90, charts.Color(r: 193, g: 53, b: 132)),
+      new Purchases("Facebook", 75, charts.Color(r: 66, g: 103, b: 178)),
+      new Purchases("Youtube", 25, charts.Color(r: 255, g: 0, b: 0)),
+      new Purchases("Snapchat", 15, charts.Color(r: 255, g: 252, b: 0)),
     ];
 
     return [
