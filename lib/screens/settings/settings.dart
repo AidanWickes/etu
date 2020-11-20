@@ -96,7 +96,7 @@ class _SettingsState extends State<Settings> {
       adapter: NumberPickerAdapter(data: <NumberPickerColumn>[
         const NumberPickerColumn(begin: 0, end: 5, suffix: Text(' hours')),
         const NumberPickerColumn(
-            begin: 0, end: 55, suffix: Text(' minutes'), jump: 5),
+            begin: 0, end: 55, suffix: Text('minutes'), jump: 5),
       ]),
       delimiter: <PickerDelimiter>[
         PickerDelimiter(
