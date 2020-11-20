@@ -4,7 +4,7 @@ var apps = [
     "monitor": false,
     "listName": "instagram",
     "time": 0,
-    "timeLimit": Duration(hours: 2, minutes: 3)
+    "timeLimit": Duration(hours: 2, minutes: 3),
   },
   {
     "name": "Snapchat",
