@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_picker/flutter_picker.dart';
+import 'package:wellbeing_app/controllers/storage.dart';
 import 'package:wellbeing_app/models/apps.dart';
 
 class SettingsCopy extends StatefulWidget {
@@ -8,6 +11,10 @@ class SettingsCopy extends StatefulWidget {
 }
 
 class _SettingsCopyState extends State<SettingsCopy> {
+  final CounterStorage storage = CounterStorage();
+
+  var toStore = [];
+
   @override
   void initState() {
     super.initState();
@@ -25,7 +32,11 @@ class _SettingsCopyState extends State<SettingsCopy> {
                     setState(() {
                       currentObject.monitor = value;
                     });
+                    toStore = [];
                     currentObject.timeLimit = currentObject.timeLimit;
+                    initialApps.forEach((app) => {toStore.add(app.toJson())});
+                    storage.writeCounter(jsonEncode(toStore));
+                    storage.readCounter();
                   },
                   value: currentObject.monitor,
                   activeColor: Color(0xFF6200EE),

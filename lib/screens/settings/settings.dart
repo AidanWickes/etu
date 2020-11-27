@@ -5,6 +5,7 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:wellbeing_app/controllers/global.dart';
 import 'package:flutter_picker/flutter_picker.dart';
+import 'package:wellbeing_app/controllers/storage.dart';
 //import 'package:wellbeing_app/screens/settings/settings%20copy.dart';
 
 final CounterStorage storage = CounterStorage();
@@ -126,46 +127,5 @@ class _SettingsState extends State<Settings> {
         storage.writeCounter(jsonEncode(apps));
       },
     ).showDialog(context);
-  }
-}
-
-class CounterStorage {
-  Future<String> get _localPath async {
-    final directory = await getApplicationDocumentsDirectory();
-
-    return directory.path;
-  }
-
-  Future<File> get _localFile async {
-    final path = await _localPath;
-    return File('$path/apps.json');
-  }
-
-  Future<List> readCounter() async {
-    try {
-      final file = await _localFile;
-
-      // Read the file
-      String contents = await file.readAsString();
-
-      var test = jsonDecode(contents);
-
-      //   apps = test;
-      var i = 0;
-      test.forEach((element) {
-        apps[i] = element;
-        i++;
-      });
-      return test;
-    } catch (e) {
-      // If encountering an error, return 0
-      return [];
-    }
-  }
-
-  Future<File> writeCounter(counter) async {
-    final file = await _localFile;
-    // Write the file
-    return file.writeAsString('$counter');
   }
 }

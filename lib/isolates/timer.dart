@@ -111,9 +111,9 @@ class CountdownTimer {
               }
             } else if (element.eventType == '2' &&
                 element.packageName.contains(app["listName"])) {
-              app["sessions"].push({
-                "time": sessionTime,
-              });
+              // app["sessions"].push({
+              //   "time": sessionTime,
+              // });
               inSession = false;
               currentApp = '';
             }

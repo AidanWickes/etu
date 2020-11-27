@@ -2,6 +2,7 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'package:wellbeing_app/controllers/global.dart';
+import 'package:wellbeing_app/models/apps.dart';
 
 class CounterStorage {
   Future<String> get _localPath async {
@@ -24,9 +25,12 @@ class CounterStorage {
 
       var test = jsonDecode(contents);
 
+      // var fromJson = App.fromJson(test);
+      var convList = [];
       //   apps = test;
       var i = 0;
       test.forEach((element) {
+        convList.add(App.fromJson(element));
         apps[i] = element;
         i++;
       });

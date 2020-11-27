@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:wellbeing_app/controllers/storage.dart';
 import 'package:wellbeing_app/screens/home/home.dart';
-import 'package:wellbeing_app/screens/settings/settings.dart';
+
 import 'package:wellbeing_app/screens/settings/settings_copy.dart';
 import 'package:wellbeing_app/screens/timer/timer.dart';
 
@@ -11,6 +12,7 @@ class Wrapper extends StatefulWidget {
 }
 
 class _WrapperState extends State<Wrapper> {
+  var storage = new CounterStorage();
   int _currentIndex = 1;
   final List<Widget> _children = [
     Timer(),
