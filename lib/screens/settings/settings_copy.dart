@@ -22,7 +22,8 @@ class _SettingsCopyState extends State<SettingsCopy> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
+        body: Column(children: [
+      Column(
         children: initialApps.map((currentObject) {
           return Container(
             child: Row(
@@ -54,7 +55,40 @@ class _SettingsCopyState extends State<SettingsCopy> {
           );
         }).toList(),
       ),
-    );
+      Divider(
+        color: Colors.black,
+        height: 20,
+        thickness: 1,
+        indent: 0,
+        endIndent: 0,
+      ),
+      //TextButton(onPressed: () => SettingsTest(), child: Text("New Settings")),
+      Row(
+        children: [
+          Expanded(child: Text("Timer lock")),
+          TextButton(onPressed: null, child: Text("5 days")),
+        ],
+      ),
+      Divider(
+        color: Colors.black,
+        height: 20,
+        thickness: 1,
+        indent: 0,
+        endIndent: 0,
+      ),
+      Row(
+        children: [
+          Expanded(child: Text("Notifications")),
+          Switch(value: null, onChanged: null)
+        ],
+      ),
+      Row(
+        children: [
+          Expanded(child: Text("Consequence & Reward")),
+          Switch(value: null, onChanged: null)
+        ],
+      ),
+    ]));
   }
 
   void onTap(index) {
