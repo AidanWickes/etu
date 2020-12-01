@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:wellbeing_app/screens/wrapper.dart';
 import 'package:wellbeing_app/isolates/timer.dart';
 
-import 'controllers/global.dart';
 import 'controllers/storage.dart';
+import 'models/apps.dart';
 
 var timer = new CountdownTimer();
 var storage = new CounterStorage();
@@ -14,7 +14,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   var isStorage = await storage.readCounter();
   if (isStorage[0] == "Error") {
-    await storage.writeCounter(jsonEncode(apps));
+    await storage.writeCounter(jsonEncode(initialApps));
   }
   await storage.readCounter();
   await timer.start();

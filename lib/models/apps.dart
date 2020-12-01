@@ -5,6 +5,8 @@ class App {
   String listName;
   Duration time;
   Duration timeLimit;
+  List<Duration> sessions;
+  bool isExpanded;
 
   App(
       {this.id,
@@ -12,20 +14,28 @@ class App {
       this.monitor,
       this.listName,
       this.time,
-      this.timeLimit});
+      this.timeLimit,
+      this.sessions,
+      this.isExpanded});
 
   App.fromJson(Map<String, dynamic> json) {
-    try {
-      id = int.parse(json['id'].toString());
-      name = json['name'];
-      monitor = json['monitor'];
-      listName = json['listName'];
-      time = getTime(json['time']);
-      ;
-      timeLimit = getTime(json['timeLimit']);
-    } catch (e) {
-      print(json['id']);
+    id = int.parse(json['id'].toString());
+    name = json['name'];
+    monitor = json['monitor'];
+    listName = json['listName'];
+    time = getTime(json['time']);
+    timeLimit = getTime(json['timeLimit']);
+    if (json['sessions'].toString() == "null" ||
+        json['sessions'].toString() == '[]') {
+      sessions = [];
+    } else {
+      List<Duration> convertedTimes = [];
+      json['sessions'].forEach((element) {
+        convertedTimes.add(getTime(element));
+      });
+      sessions = convertedTimes;
     }
+    isExpanded = json['isExpanded'];
   }
 
   Duration getTime(String timeLimit) {
@@ -51,8 +61,14 @@ class App {
     data['name'] = name;
     data['monitor'] = monitor;
     data['listName'] = listName;
-    data['time'] = time;
+    data['time'] = time.toString();
     data['timeLimit'] = timeLimit.toString();
+    var convertedSession = [];
+    sessions.forEach((element) {
+      convertedSession.add(element.toString());
+    });
+    data['sessions'] = convertedSession;
+    data['isExpanded'] = isExpanded;
     return data;
   }
 }
@@ -64,39 +80,51 @@ List<App> initialApps = []
       monitor: false,
       listName: "facebook",
       time: Duration(hours: 0, minutes: 0),
-      timeLimit: Duration(hours: 2, minutes: 0)))
+      timeLimit: Duration(hours: 2, minutes: 0),
+      sessions: [],
+      isExpanded: false))
   ..add(App(
       id: 1,
       name: "Instagram",
       monitor: false,
       listName: "instagram",
       time: Duration(hours: 0, minutes: 0),
-      timeLimit: Duration(hours: 2, minutes: 5)))
+      timeLimit: Duration(hours: 2, minutes: 5),
+      sessions: [Duration(minutes: 20), Duration(minutes: 10)],
+      isExpanded: false))
   ..add(App(
       id: 2,
       name: "Reddit",
       monitor: false,
       listName: "reddit",
       time: Duration(hours: 0, minutes: 0),
-      timeLimit: Duration(hours: 2, minutes: 10)))
+      timeLimit: Duration(hours: 2, minutes: 10),
+      sessions: [],
+      isExpanded: false))
   ..add(App(
       id: 3,
       name: "Snapchat",
       monitor: false,
       listName: "snapchat",
       time: Duration(hours: 0, minutes: 0),
-      timeLimit: Duration(hours: 2, minutes: 15)))
+      timeLimit: Duration(hours: 2, minutes: 15),
+      sessions: [Duration(hours: 1, minutes: 20)],
+      isExpanded: false))
   ..add(App(
       id: 4,
       name: "Tik Tok",
       monitor: false,
       listName: "tiktok",
       time: Duration(hours: 0, minutes: 0),
-      timeLimit: Duration(hours: 2, minutes: 20)))
+      timeLimit: Duration(hours: 2, minutes: 20),
+      sessions: [],
+      isExpanded: false))
   ..add(App(
       id: 5,
       name: "Youtube",
       monitor: false,
       listName: "youtube",
       time: Duration(hours: 0, minutes: 0),
-      timeLimit: Duration(hours: 2, minutes: 25)));
+      timeLimit: Duration(hours: 2, minutes: 25),
+      sessions: [],
+      isExpanded: false));

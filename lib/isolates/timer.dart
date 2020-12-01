@@ -10,6 +10,7 @@ import 'package:isolate_handler/isolate_handler.dart';
 import 'package:usage_stats/usage_stats.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:wellbeing_app/controllers/storage.dart';
+import 'package:wellbeing_app/models/apps.dart';
 import 'package:wellbeing_app/notifications/notification.dart';
 
 var sessions = [];
@@ -42,50 +43,9 @@ class CountdownTimer {
     Timer.periodic(
       Duration(seconds: 10),
       (timer) async {
-        var directory = await getApplicationDocumentsDirectory();
-        var path = directory.path;
-        final localFile = File('$path/apps.json');
-        String contents = await localFile.readAsString();
-        var file = jsonDecode(contents);
-        var i = 0;
-        file.forEach((element) {
-          int hours = 0;
-          int minutes = 0;
-          int micros;
-          if (element["timeLimit"].toString() != "null") {
-            List<String> parts = element["timeLimit"].split(':');
-            if (parts.length > 2) {
-              hours = int.parse(parts[parts.length - 3]);
-            }
-            if (parts.length > 1) {
-              minutes = int.parse(parts[parts.length - 2]);
-            }
-            micros = (double.parse(parts[parts.length - 1]) * 1000000).round();
-            file[i]["timeLimit"] =
-                Duration(hours: hours, minutes: minutes, microseconds: micros);
-          }
-          if (element["time"].toString() != '0') {
-            List<String> parts = element["time"].split(':');
-            if (parts.length > 2) {
-              hours = int.parse(parts[parts.length - 3]);
-            }
-            if (parts.length > 1) {
-              minutes = int.parse(parts[parts.length - 2]);
-            }
-            micros = (double.parse(parts[parts.length - 1]) * 1000000).round();
-            file[i]["time"] =
-                Duration(hours: hours, minutes: minutes, microseconds: micros);
-          } else {
-            file[i]["time"] = new Duration();
-          }
-          // apps[i] = element;
-          i++;
-        });
-        // if (timer.tick == initialTime) {
-        //   timer.cancel();
-        //   port.send(timer.tick);
-        //   port.send('Timer finished');
-        // } else {
+        var storage = new CounterStorage();
+        List<App> apps = await storage.readCounter();
+
         DateTime endDate = DateTime.now();
         DateTime startDate = endDate.subtract(new Duration(seconds: 10));
         // List<AppUsageInfo> infos =
@@ -95,51 +55,52 @@ class CountdownTimer {
         // print(timer.tick);
         // print(events.reversed.toList());
         events.forEach((element) {
-          file.forEach((app) {
+          apps.forEach((app) {
             if (element.eventType == '1' &&
-                element.packageName.contains(app["listName"])) {
-              print(app["name"].toString() + " session started");
-              currentApp = app["name"];
+                element.packageName.contains(app.listName)) {
+              print(app.name.toString() + " session started");
+              currentApp = app.name;
               if (inSession == false) {
                 inSession = true;
                 sessionTime = new Duration(seconds: 0);
-                if (app["time"].toString() != '0') {
-                  currentTime = app["time"];
+                if (app.time.toString() != '0') {
+                  return currentTime = app.time;
                 } else {
-                  currentTime = new Duration(seconds: 0);
+                  return currentTime = new Duration(seconds: 0);
                 }
               }
-            } else if (element.eventType == '2' &&
-                element.packageName.contains(app["listName"])) {
-              // app["sessions"].push({
-              //   "time": sessionTime,
-              // });
+            } else if (element.eventType != '1' &&
+                element.packageName.contains(app.listName) &&
+                inSession &&
+                currentApp == app.name) {
+              app.sessions.add(sessionTime);
               inSession = false;
               currentApp = '';
             }
           });
         });
         if (inSession == true) {
-          await file.forEach((app) {
-            if (app["name"] == currentApp) {
-              print(app["time"]);
-              app["time"] += Duration(seconds: 10);
-              print(app["time"]);
-              if (app["time"] > app["timeLimit"]) {
+          await apps.forEach((app) {
+            if (app.name == currentApp) {
+              print(app.time);
+              app.time += Duration(seconds: 10);
+              print(app.time);
+              if (app.time > app.timeLimit) {
                 var message = "App: " +
                     currentApp +
                     " Time:  " +
-                    app["time"].toString() +
+                    app.time.toString() +
                     " Limit " +
-                    app["timeLimit"].toString();
+                    app.timeLimit.toString();
                 notificationPlugin.showNotification(message);
               }
             }
-            app["timeLimit"] = app["timeLimit"].toString();
-            app["time"] = app["time"].toString();
+            // app["timeLimit"] = app["timeLimit"].toString();
+            // app["time"] = app["time"].toString();
           });
-          var fileContents = jsonEncode(file);
-          File('$path/apps.json').writeAsString('$fileContents');
+          var toStore = [];
+          apps.forEach((app) => {toStore.add(app.toJson())});
+          await storage.writeCounter(jsonEncode(toStore));
           sessionTime += Duration(seconds: 10);
         }
         // event type 1 is opened and 2 is closed

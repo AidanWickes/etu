@@ -6,6 +6,7 @@ import 'package:usage_stats/usage_stats.dart';
 import 'package:app_usage/app_usage.dart';
 import 'package:wellbeing_app/controllers/global.dart';
 import 'package:wellbeing_app/controllers/storage.dart';
+import 'package:wellbeing_app/models/apps.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -43,17 +44,29 @@ class _HomeState extends State<Home> {
       setState(() {
         _infos.clear();
         infos.forEach((element) {
-          apps.forEach((appElement) {
-            if (element.packageName == appElement["listName"] &&
-                appElement["monitor"]) {
-              appElement["time"] = element.usage.toString();
-              storage.writeCounter(jsonEncode(apps));
+          initialApps.forEach((appElement) {
+            if (element.packageName == appElement.listName &&
+                appElement.monitor) {
+              var toStore = [];
+              initialApps.forEach((app) {
+                if (app.name == appElement.name) {
+                  app.time = element.usage;
+                }
+                toStore.add(app.toJson());
+              });
+              storage.writeCounter(jsonEncode(toStore));
               return _infos.add(element);
-            } else if (appElement["listName"] == "youtube") {
-              if (element.appName == appElement["listName"] &&
-                  appElement["monitor"]) {
-                appElement["time"] = element.usage.toString();
-                storage.writeCounter(jsonEncode(apps));
+            } else if (appElement.listName == "youtube") {
+              if (element.appName == appElement.listName &&
+                  appElement.monitor) {
+                var toStore = [];
+                initialApps.forEach((app) {
+                  if (app.name == appElement.name) {
+                    app.time = element.usage;
+                  }
+                  toStore.add(app.toJson());
+                });
+                storage.writeCounter(jsonEncode(toStore));
                 return _infos.add(element);
               }
             }
@@ -72,12 +85,12 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView.builder(
-          itemCount: apps.length,
+          itemCount: initialApps.length,
           itemBuilder: (context, index) {
-            if (apps[index]["monitor"]) {
+            if (initialApps[index].monitor) {
               return ListTile(
-                  title: Text(apps[index]["name"]),
-                  trailing: Text(apps[index]["time"].toString()));
+                  title: Text(initialApps[index].name),
+                  trailing: Text(initialApps[index].time.toString()));
             } else {
               return SizedBox.shrink();
             }

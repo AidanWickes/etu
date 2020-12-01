@@ -26,7 +26,7 @@ class CounterStorage {
       var test = jsonDecode(contents);
 
       // var fromJson = App.fromJson(test);
-      var convList = [];
+      List<App> convList = [];
       //   apps = test;
       var i = 0;
       test.forEach((element) {
@@ -34,7 +34,8 @@ class CounterStorage {
         apps[i] = element;
         i++;
       });
-      return apps;
+      initialApps = convList;
+      return convList;
     } catch (e) {
       // If encountering an error, return 0
       return ['Error'];

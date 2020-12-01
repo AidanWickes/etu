@@ -17,6 +17,7 @@ class _SettingsCopyState extends State<SettingsCopy> {
 
   @override
   void initState() {
+    storage.readCounter();
     super.initState();
   }
 
@@ -35,9 +36,14 @@ class _SettingsCopyState extends State<SettingsCopy> {
                     });
                     toStore = [];
                     currentObject.timeLimit = currentObject.timeLimit;
-                    initialApps.forEach((app) => {toStore.add(app.toJson())});
+                    initialApps.forEach((app) {
+                      if (app.name == currentObject.name) {
+                        app.monitor = currentObject.monitor;
+                      }
+                      toStore.add(app.toJson());
+                    });
                     storage.writeCounter(jsonEncode(toStore));
-                    storage.readCounter();
+                    // storage.readCounter();
                   },
                   value: currentObject.monitor,
                   activeColor: Color(0xFF6200EE),
