@@ -55,7 +55,7 @@ class _SettingsState extends State<Settings> {
                       // storage.readCounter();
                     },
                     value: currentObject.monitor,
-                    activeColor: Color(0xFF6200EE),
+                    activeColor: Color(0xFF9FE79C),
                   ),
                   Expanded(child: Text(currentObject.name)),
                   TextButton(
@@ -71,7 +71,7 @@ class _SettingsState extends State<Settings> {
           }).toList(),
         ),
         Divider(
-          color: Colors.black,
+          color: Color(0xFF78787d),
           height: 20,
           thickness: 1,
           indent: 0,
@@ -84,7 +84,7 @@ class _SettingsState extends State<Settings> {
           ],
         ),
         Divider(
-          color: Colors.black,
+          color: Color(0xFF78787d),
           height: 20,
           thickness: 1,
           indent: 0,
