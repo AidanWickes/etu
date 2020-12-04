@@ -31,7 +31,7 @@ class DonutPieChart extends StatelessWidget {
           child: Text(
             "Today",
             style: TextStyle(
-              fontFamily: 'Quicksand',
+                fontFamily: 'Quicksand',
                 fontSize: 50.0,
                 fontWeight: FontWeight.w500),
           ),

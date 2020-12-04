@@ -1,9 +1,10 @@
 import 'dart:convert';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'dart:async';
 import 'package:usage_stats/usage_stats.dart';
 import 'package:app_usage/app_usage.dart';
+
 import 'package:wellbeing_app/controllers/storage.dart';
 import 'package:wellbeing_app/models/apps.dart';
 
@@ -18,8 +19,11 @@ class _HomeGridState extends State<HomeGrid> {
 
   var storage = new CounterStorage();
 
+  List<App> _trackedApps;
+
   @override
   void initState() {
+    _trackedApps = initialApps.where((i) => i.monitor).toList();
     initUsage();
     super.initState();
   }
@@ -76,10 +80,10 @@ class _HomeGridState extends State<HomeGrid> {
         // horizontal, this produces 2 rows.
         crossAxisCount: 2,
         // Generate widgets that display their index in the List.
-        children: List.generate(initialApps.length, (index) {
+        children: List.generate(_trackedApps.length, (index) {
           return Center(
             child: Text(
-              initialApps[index].name,
+              _trackedApps[index].name,
               style: Theme.of(context).textTheme.headline5,
             ),
           );

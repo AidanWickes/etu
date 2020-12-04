@@ -3,8 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:wellbeing_app/controllers/storage.dart';
 import 'package:wellbeing_app/screens/home/homeGrid.dart';
-//import 'package:wellbeing_app/screens/settings/settings.dart';
-import 'package:wellbeing_app/screens/settings/settings_copy.dart';
+import 'package:wellbeing_app/screens/settings/settings.dart';
 import 'package:wellbeing_app/screens/timer/timer.dart';
 
 class Wrapper extends StatefulWidget {
@@ -18,7 +17,7 @@ class _WrapperState extends State<Wrapper> {
   final List<Widget> _children = [
     Timer(),
     HomeGrid(),
-    SettingsCopy(),
+    Settings(),
   ];
 
   void initState() {
@@ -31,7 +30,7 @@ class _WrapperState extends State<Wrapper> {
         context: context,
         builder: (ctx) {
           return Container(
-              height: MediaQuery.of(context).size.height * 0.8,
+              height: MediaQuery.of(context).size.height * 0.9,
               padding: EdgeInsets.all(16.0),
               child: Column(children: <Widget>[
                 Center(
@@ -51,7 +50,27 @@ class _WrapperState extends State<Wrapper> {
                               fontFamily: 'Nunito',
                               fontSize: 25))),
                 ),
-                Text("Consequence & Reward Log")
+                Text("Consequence & Reward Log"),
+                TextButton(onPressed: null, child: Text("Redeem")),
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Icon(
+                          FontAwesomeIcons.instagram,
+                          color: Colors.pink,
+                          size: 24.0,
+                          semanticLabel:
+                              'Text to announce in accessibility modes',
+                        ),
+                      ),
+                      Expanded(child: Text("Timer Exceeded")),
+                      Text("-6")
+                    ]),
+                  ),
+                ),
               ]));
         });
   }

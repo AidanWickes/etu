@@ -1,13 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_picker/flutter_picker.dart';
-
-import 'package:wellbeing_app/controllers/global.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:wellbeing_app/controllers/storage.dart';
-
-final CounterStorage storage = CounterStorage();
+import 'package:wellbeing_app/models/apps.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -15,45 +12,64 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
+  final CounterStorage storage = CounterStorage();
+
+  var toStore = [];
+
   @override
   void initState() {
+    storage.readCounter();
     super.initState();
   }
 
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(
-      children: [
+        body: Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(children: [
         Row(
           children: [
-            Text('Applications'),
+            Expanded(child: Text("Applications")),
             Icon(FontAwesomeIcons.hourglass),
           ],
         ),
-        for (var i = 0; i < apps.length; i += 1)
-          Row(
-            children: [
-              Checkbox(
-                onChanged: (bool value) {
-                  setState(() {
-                    apps[i]["monitor"] = value;
-                  });
-                  apps[i]["timeLimit"] = apps[i]["timeLimit"].toString();
-                  storage.writeCounter(jsonEncode(apps));
-                },
-                value: apps[i]["monitor"],
-                activeColor: Color(0xFF6200EE),
+        Column(
+          children: initialApps.map((currentObject) {
+            return Container(
+              child: Row(
+                children: <Widget>[
+                  Checkbox(
+                    onChanged: (bool value) {
+                      setState(() {
+                        currentObject.monitor = value;
+                      });
+                      toStore = [];
+                      currentObject.timeLimit = currentObject.timeLimit;
+                      initialApps.forEach((app) {
+                        if (app.name == currentObject.name) {
+                          app.monitor = currentObject.monitor;
+                        }
+                        toStore.add(app.toJson());
+                      });
+                      storage.writeCounter(jsonEncode(toStore));
+                      // storage.readCounter();
+                    },
+                    value: currentObject.monitor,
+                    activeColor: Color(0xFF6200EE),
+                  ),
+                  Expanded(child: Text(currentObject.name)),
+                  TextButton(
+                      onPressed: () => onTap(currentObject.id),
+                      child: Text(currentObject.timeLimit
+                          .toString()
+                          .split('.')
+                          .first
+                          .padLeft(8, "0"))),
+                ],
               ),
-              Expanded(child: Text(apps[i]["name"])),
-              TextButton(
-                  onPressed: () => onTap(i),
-                  child: Text(apps[i]["timeLimit"]
-                      .toString()
-                      .split('.')
-                      .first
-                      .padLeft(8, "0"))),
-            ],
-          ),
+            );
+          }).toList(),
+        ),
         Divider(
           color: Colors.black,
           height: 20,
@@ -86,7 +102,7 @@ class _SettingsState extends State<Settings> {
             Switch(value: false, onChanged: null)
           ],
         ),
-      ],
+      ]),
     ));
   }
 
@@ -95,7 +111,7 @@ class _SettingsState extends State<Settings> {
       adapter: NumberPickerAdapter(data: <NumberPickerColumn>[
         const NumberPickerColumn(begin: 0, end: 5, suffix: Text(' hours')),
         const NumberPickerColumn(
-            begin: 0, end: 55, suffix: Text('minutes'), jump: 5),
+            begin: 0, end: 55, suffix: Text(' minutes'), jump: 5),
       ]),
       delimiter: <PickerDelimiter>[
         PickerDelimiter(
@@ -114,15 +130,11 @@ class _SettingsState extends State<Settings> {
       selectedTextStyle: TextStyle(color: Colors.blue),
       onConfirm: (Picker picker, List<int> value) {
         // You get your duration here
-
         setState(() {
-          apps[index]["timeLimit"] = Duration(
-                  hours: picker.getSelectedValues()[0],
-                  minutes: picker.getSelectedValues()[1])
-              .toString();
+          initialApps[index].timeLimit = new Duration(
+              hours: picker.getSelectedValues()[0],
+              minutes: picker.getSelectedValues()[1]);
         });
-
-        storage.writeCounter(jsonEncode(apps));
       },
     ).showDialog(context);
   }
