@@ -1,19 +1,18 @@
 import 'dart:convert';
-import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'dart:async';
 import 'package:usage_stats/usage_stats.dart';
 import 'package:app_usage/app_usage.dart';
-
 import 'package:wellbeing_app/controllers/storage.dart';
 import 'package:wellbeing_app/models/apps.dart';
 
-class Home extends StatefulWidget {
+class HomeGrid extends StatefulWidget {
   @override
-  _HomeState createState() => _HomeState();
+  _HomeGridState createState() => _HomeGridState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeGridState extends State<HomeGrid> {
   List<EventUsageInfo> events = [];
   List<AppUsageInfo> _infos = [];
 
@@ -27,15 +26,6 @@ class _HomeState extends State<Home> {
 
   Future<void> initUsage() async {
     UsageStats.grantUsagePermission();
-    // DateTime endDate = new DateTime.now();
-    // DateTime startDate = endDate.subtract(new Duration(days: 1));
-    // List<EventUsageInfo> queryEvents =
-    // await UsageStats.queryEvents(startDate, endDate);
-    //
-    // this.setState(() {
-    //   events = queryEvents.reversed.toList();
-    // });
-
     try {
       DateTime endDate = DateTime.now();
       DateTime startDate = endDate
@@ -71,9 +61,6 @@ class _HomeState extends State<Home> {
               }
             }
           });
-          // if (element.packageName == "google" && element.appName == "youtube" || element.packageName == "instagram" || element.packageName == "snapchat"){
-          //   return _infos.add(element);
-          // }
         });
       });
     } on AppUsageException catch (exception) {
@@ -84,17 +71,20 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView.builder(
-          itemCount: initialApps.length,
-          itemBuilder: (context, index) {
-            if (initialApps[index].monitor) {
-              return ListTile(
-                  title: Text(initialApps[index].name),
-                  trailing: Text(initialApps[index].time.toString()));
-            } else {
-              return SizedBox.shrink();
-            }
-          }),
+      body: GridView.count(
+        // Create a grid with 2 columns. If you change the scrollDirection to
+        // horizontal, this produces 2 rows.
+        crossAxisCount: 2,
+        // Generate widgets that display their index in the List.
+        children: List.generate(initialApps.length, (index) {
+          return Center(
+            child: Text(
+              initialApps[index].name,
+              style: Theme.of(context).textTheme.headline5,
+            ),
+          );
+        }),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           initUsage();

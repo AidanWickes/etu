@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:wellbeing_app/controllers/storage.dart';
-import 'package:wellbeing_app/screens/home/home.dart';
 
+import 'package:wellbeing_app/controllers/storage.dart';
+import 'package:wellbeing_app/screens/home/homeGrid.dart';
+//import 'package:wellbeing_app/screens/settings/settings.dart';
 import 'package:wellbeing_app/screens/settings/settings_copy.dart';
 import 'package:wellbeing_app/screens/timer/timer.dart';
 
@@ -16,13 +17,43 @@ class _WrapperState extends State<Wrapper> {
   int _currentIndex = 1;
   final List<Widget> _children = [
     Timer(),
-    Home(),
+    HomeGrid(),
     SettingsCopy(),
   ];
 
   void initState() {
     storage.readCounter();
     super.initState();
+  }
+
+  void displayBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (ctx) {
+          return Container(
+              height: MediaQuery.of(context).size.height * 0.8,
+              padding: EdgeInsets.all(16.0),
+              child: Column(children: <Widget>[
+                Center(
+                  child: FlatButton.icon(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(100.0),
+                          side: BorderSide(color: Color(0xFF2CA5B5))),
+                      color: Color(0xFF2CA5B5),
+                      // padding: EdgeInsets.all(10.0),
+                      onPressed: () {},
+                      icon: FaIcon(FontAwesomeIcons.coins,
+                          size: 20, color: Color(0xFFE8CE22)),
+                      label: Text('24',
+                          style: TextStyle(
+                              color: Color(0xFFE8CE22),
+                              fontWeight: FontWeight.w300,
+                              fontFamily: 'Nunito',
+                              fontSize: 25))),
+                ),
+                Text("Consequence & Reward Log")
+              ]));
+        });
   }
 
   @override
@@ -44,11 +75,11 @@ class _WrapperState extends State<Wrapper> {
             actions: [
               FlatButton.icon(
                   // shape: RoundedRectangleBorder(
-                  // borderRadius: BorderRadius.circular(100.0),
-                  // side: BorderSide(color: Color(0xFF2CA5B5))),
-                  // color:Color(0xFF2CA5B5),
+                  //     borderRadius: BorderRadius.circular(100.0),
+                  //     side: BorderSide(color: Color(0xFF2CA5B5))),
+                  // color: Color(0xFF2CA5B5),
                   // padding: EdgeInsets.all(10.0),
-                  onPressed: () {},
+                  onPressed: () => displayBottomSheet(context),
                   icon: FaIcon(FontAwesomeIcons.coins,
                       size: 20, color: Color(0xFFE8CE22)),
                   label: Text('24',

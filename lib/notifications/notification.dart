@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:rxdart/rxdart.dart';
 
 // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
 class NotificationClass {

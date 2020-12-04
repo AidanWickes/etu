@@ -68,7 +68,6 @@ class _SettingsCopyState extends State<SettingsCopy> {
         indent: 0,
         endIndent: 0,
       ),
-      //TextButton(onPressed: () => SettingsTest(), child: Text("New Settings")),
       Row(
         children: [
           Expanded(child: Text("Timer lock")),
@@ -85,13 +84,13 @@ class _SettingsCopyState extends State<SettingsCopy> {
       Row(
         children: [
           Expanded(child: Text("Notifications")),
-          Switch(value: null, onChanged: null)
+          Switch(value: false, onChanged: null)
         ],
       ),
       Row(
         children: [
           Expanded(child: Text("Consequence & Reward")),
-          Switch(value: null, onChanged: null)
+          Switch(value: false, onChanged: null)
         ],
       ),
     ]));

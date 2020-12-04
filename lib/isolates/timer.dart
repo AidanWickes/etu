@@ -1,14 +1,10 @@
 import 'dart:async';
 import 'dart:isolate';
-import 'package:path_provider/path_provider.dart';
-import 'dart:io';
 import 'dart:convert';
-import 'package:wellbeing_app/controllers/global.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:wellbeing_app/controllers/global.dart' as oldApps;
+
 import 'package:isolate_handler/isolate_handler.dart';
 import 'package:usage_stats/usage_stats.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 import 'package:wellbeing_app/controllers/storage.dart';
 import 'package:wellbeing_app/models/apps.dart';
 import 'package:wellbeing_app/notifications/notification.dart';

@@ -1,12 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:path_provider/path_provider.dart';
-import 'dart:io';
-import 'dart:convert';
-import 'package:wellbeing_app/controllers/global.dart';
 import 'package:flutter_picker/flutter_picker.dart';
+
+import 'package:wellbeing_app/controllers/global.dart';
 import 'package:wellbeing_app/controllers/storage.dart';
-//import 'package:wellbeing_app/screens/settings/settings%20copy.dart';
 
 final CounterStorage storage = CounterStorage();
 
@@ -62,7 +61,6 @@ class _SettingsState extends State<Settings> {
           indent: 0,
           endIndent: 0,
         ),
-        //TextButton(onPressed: () => SettingsTest(), child: Text("New Settings")),
         Row(
           children: [
             Expanded(child: Text("Timer lock")),
@@ -79,13 +77,13 @@ class _SettingsState extends State<Settings> {
         Row(
           children: [
             Expanded(child: Text("Notifications")),
-            Switch(value: null, onChanged: null)
+            Switch(value: false, onChanged: null)
           ],
         ),
         Row(
           children: [
             Expanded(child: Text("Consequence & Reward")),
-            Switch(value: null, onChanged: null)
+            Switch(value: false, onChanged: null)
           ],
         ),
       ],

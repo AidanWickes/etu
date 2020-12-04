@@ -4,12 +4,12 @@ import 'package:slowly_moving_widgets_field/slowly_moving_widgets_field.dart';
 
 final r = new Random();
 
-class bubble extends StatefulWidget {
+class Bubble extends StatefulWidget {
   @override
-  _bubbleState createState() => _bubbleState();
+  _BubbleState createState() => _BubbleState();
 }
 
-class _bubbleState extends State<bubble> {
+class _BubbleState extends State<Bubble> {
   final List<Moving> list = [];
 
   @override
