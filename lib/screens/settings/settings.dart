@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_picker/flutter_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:wellbeing_app/controllers/global.dart';
 import 'package:wellbeing_app/controllers/storage.dart';
 import 'package:wellbeing_app/models/apps.dart';
 
@@ -93,13 +94,26 @@ class _SettingsState extends State<Settings> {
         Row(
           children: [
             Expanded(child: Text("Notifications")),
-            Switch(value: false, onChanged: null)
+            Switch(
+              value: showNotifications,
+              onChanged: (bool value) {
+                setState(() {
+                  showNotifications = value;
+                });
+              },
+            )
           ],
         ),
         Row(
           children: [
             Expanded(child: Text("Consequence & Reward")),
-            Switch(value: false, onChanged: null)
+            Switch(
+                value: rewards,
+                onChanged: (bool value) {
+                  setState(() {
+                    rewards = value;
+                  });
+                })
           ],
         ),
       ]),

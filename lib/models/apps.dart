@@ -7,6 +7,7 @@ class App {
   Duration timeLimit;
   List<Duration> sessions;
   bool isExpanded;
+  String color;
 
   App(
       {this.id,
@@ -16,7 +17,8 @@ class App {
       this.time,
       this.timeLimit,
       this.sessions,
-      this.isExpanded});
+      this.isExpanded,
+      this.color});
 
   App.fromJson(Map<String, dynamic> json) {
     id = int.parse(json['id'].toString());
@@ -36,6 +38,7 @@ class App {
       sessions = convertedTimes;
     }
     isExpanded = json['isExpanded'];
+    color = json['color'];
   }
 
   Duration getTime(String timeLimit) {
@@ -69,6 +72,7 @@ class App {
     });
     data['sessions'] = convertedSession;
     data['isExpanded'] = isExpanded;
+    data['color'] = color;
     return data;
   }
 }
@@ -82,7 +86,8 @@ List<App> initialApps = []
       time: Duration(hours: 0, minutes: 0),
       timeLimit: Duration(hours: 2, minutes: 0),
       sessions: [],
-      isExpanded: false))
+      isExpanded: false,
+      color: '#4267b2'))
   ..add(App(
       id: 1,
       name: "Instagram",
@@ -91,7 +96,8 @@ List<App> initialApps = []
       time: Duration(hours: 0, minutes: 0),
       timeLimit: Duration(hours: 2, minutes: 5),
       sessions: [Duration(minutes: 20), Duration(minutes: 10)],
-      isExpanded: false))
+      isExpanded: false,
+      color: '#c13584'))
   ..add(App(
       id: 2,
       name: "Reddit",
@@ -100,7 +106,8 @@ List<App> initialApps = []
       time: Duration(hours: 0, minutes: 0),
       timeLimit: Duration(hours: 2, minutes: 10),
       sessions: [],
-      isExpanded: false))
+      isExpanded: false,
+      color: '#c8c8c8'))
   ..add(App(
       id: 3,
       name: "Snapchat",
@@ -109,7 +116,8 @@ List<App> initialApps = []
       time: Duration(hours: 0, minutes: 0),
       timeLimit: Duration(hours: 2, minutes: 15),
       sessions: [Duration(hours: 1, minutes: 20)],
-      isExpanded: false))
+      isExpanded: false,
+      color: '#fffc00'))
   ..add(App(
       id: 4,
       name: "Tik Tok",
@@ -118,7 +126,8 @@ List<App> initialApps = []
       time: Duration(hours: 0, minutes: 0),
       timeLimit: Duration(hours: 2, minutes: 20),
       sessions: [],
-      isExpanded: false))
+      isExpanded: false,
+      color: '#c8c8c8'))
   ..add(App(
       id: 5,
       name: "Youtube",
@@ -127,4 +136,5 @@ List<App> initialApps = []
       time: Duration(hours: 0, minutes: 0),
       timeLimit: Duration(hours: 2, minutes: 25),
       sessions: [],
-      isExpanded: false));
+      isExpanded: false,
+      color: '#ff0000'));

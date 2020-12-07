@@ -48,3 +48,5 @@ var apps = [
     "sessions": []
   }
 ];
+var showNotifications = true;
+var rewards = false;
