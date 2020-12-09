@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:wellbeing_app/controllers/storage.dart';
+import 'package:wellbeing_app/models/settingsModel.dart' as metaData;
 import 'package:wellbeing_app/screens/home/homeGrid.dart';
 import 'package:wellbeing_app/screens/settings/settings.dart';
 import 'package:wellbeing_app/screens/timer/timer.dart';
@@ -43,7 +44,7 @@ class _WrapperState extends State<Wrapper> {
                       onPressed: () {},
                       icon: FaIcon(FontAwesomeIcons.coins,
                           size: 20, color: Color(0xFFE8CE22)),
-                      label: Text('24',
+                      label: Text(metaData.settings.totalPoints.toString(),
                           style: TextStyle(
                               color: Color(0xFFE8CE22),
                               fontWeight: FontWeight.w300,
@@ -101,7 +102,7 @@ class _WrapperState extends State<Wrapper> {
                   onPressed: () => displayBottomSheet(context),
                   icon: FaIcon(FontAwesomeIcons.coins,
                       size: 20, color: Color(0xFFE8CE22)),
-                  label: Text('24',
+                  label: Text(metaData.settings.totalPoints.toString(),
                       style: TextStyle(
                           color: Color(0xFFE8CE22),
                           fontWeight: FontWeight.w300,

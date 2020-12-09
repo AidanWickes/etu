@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:wellbeing_app/models/apps.dart';
 import 'package:wellbeing_app/models/purchases.dart';
 
 class DonutPieChart extends StatelessWidget {
@@ -40,21 +41,22 @@ class DonutPieChart extends StatelessWidget {
     );
   }
 
-  static List<charts.Series<Purchases, String>> _createPurchaseData() {
-    final data = [
-      new Purchases("Instagram", 90, charts.Color(r: 193, g: 53, b: 132)),
-      new Purchases("Facebook", 75, charts.Color(r: 66, g: 103, b: 178)),
-      new Purchases("Youtube", 25, charts.Color(r: 255, g: 0, b: 0)),
-      new Purchases("Snapchat", 15, charts.Color(r: 255, g: 252, b: 0)),
-    ];
+  static List<charts.Series<App, String>> _createPurchaseData() {
+    final List<App> data = [];
+    initialApps.forEach((App app) {
+      if (app.monitor) {
+        data.add(app);
+      }
+    });
 
     return [
-      new charts.Series<Purchases, String>(
+      new charts.Series<App, String>(
         id: 'Purchases',
-        domainFn: (Purchases purchases, _) => purchases.category,
-        measureFn: (Purchases purchases, _) => purchases.amount,
+        domainFn: (App apps, _) => apps.name,
+        measureFn: (App apps, _) => apps.time.inMinutes,
         data: data,
-        colorFn: (Purchases purchases, _) => purchases.color,
+        colorFn: (App apps, _) =>
+            charts.Color.fromHex(code: '#' + apps.color.substring(4)),
       )
     ];
   }

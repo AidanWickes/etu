@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 class App {
   int id;
   String name;
@@ -8,7 +11,8 @@ class App {
   List<Duration> sessions;
   bool isExpanded;
   String color;
-
+  bool isBroken;
+  int points;
   App(
       {this.id,
       this.name,
@@ -18,7 +22,9 @@ class App {
       this.timeLimit,
       this.sessions,
       this.isExpanded,
-      this.color});
+      this.color,
+      this.isBroken,
+      this.points});
 
   App.fromJson(Map<String, dynamic> json) {
     id = int.parse(json['id'].toString());
@@ -39,6 +45,8 @@ class App {
     }
     isExpanded = json['isExpanded'];
     color = json['color'];
+    isBroken = json['isBroken'];
+    points = int.parse(json['points'].toString());
   }
 
   Duration getTime(String timeLimit) {
@@ -73,6 +81,8 @@ class App {
     data['sessions'] = convertedSession;
     data['isExpanded'] = isExpanded;
     data['color'] = color;
+    data['isBroken'] = isBroken;
+    data['points'] = points;
     return data;
   }
 }
@@ -87,7 +97,9 @@ List<App> initialApps = []
       timeLimit: Duration(hours: 2, minutes: 0),
       sessions: [],
       isExpanded: false,
-      color: '#4267b2'))
+      color: '0xff4267b2',
+      isBroken: false,
+      points: 0))
   ..add(App(
       id: 1,
       name: "Instagram",
@@ -97,7 +109,9 @@ List<App> initialApps = []
       timeLimit: Duration(hours: 2, minutes: 5),
       sessions: [Duration(minutes: 20), Duration(minutes: 10)],
       isExpanded: false,
-      color: '#c13584'))
+      color: '0xffc13584',
+      isBroken: false,
+      points: 0))
   ..add(App(
       id: 2,
       name: "Reddit",
@@ -107,7 +121,9 @@ List<App> initialApps = []
       timeLimit: Duration(hours: 2, minutes: 10),
       sessions: [],
       isExpanded: false,
-      color: '#c8c8c8'))
+      color: '0xffff4500',
+      isBroken: false,
+      points: 0))
   ..add(App(
       id: 3,
       name: "Snapchat",
@@ -117,7 +133,9 @@ List<App> initialApps = []
       timeLimit: Duration(hours: 2, minutes: 15),
       sessions: [Duration(hours: 1, minutes: 20)],
       isExpanded: false,
-      color: '#fffc00'))
+      color: '0xfffffc00',
+      isBroken: false,
+      points: 0))
   ..add(App(
       id: 4,
       name: "Tik Tok",
@@ -127,7 +145,9 @@ List<App> initialApps = []
       timeLimit: Duration(hours: 2, minutes: 20),
       sessions: [],
       isExpanded: false,
-      color: '#c8c8c8'))
+      color: '0xff4de8f4',
+      isBroken: false,
+      points: 0))
   ..add(App(
       id: 5,
       name: "Youtube",
@@ -137,4 +157,53 @@ List<App> initialApps = []
       timeLimit: Duration(hours: 2, minutes: 25),
       sessions: [],
       isExpanded: false,
-      color: '#ff0000'));
+      color: '0xffff0000',
+      isBroken: false,
+      points: 0));
+
+Icon getIcon(App app) {
+  switch (app.name) {
+    case 'Facebook':
+      return Icon(
+        FontAwesomeIcons.facebook,
+        color: Color(int.parse(app.color)),
+        size: 24.0,
+        semanticLabel: 'Text to announce in accessibility modes',
+      );
+    case 'Instagram':
+      return Icon(
+        FontAwesomeIcons.instagram,
+        color: Color(int.parse(app.color)),
+        size: 24.0,
+        semanticLabel: 'Text to announce in accessibility modes',
+      );
+    case 'Reddit':
+      return Icon(
+        FontAwesomeIcons.reddit,
+        color: Color(int.parse(app.color)),
+        size: 24.0,
+        semanticLabel: 'Text to announce in accessibility modes',
+      );
+    case 'Snapchat':
+      return Icon(
+        FontAwesomeIcons.snapchat,
+        color: Color(int.parse(app.color)),
+        size: 24.0,
+        semanticLabel: 'Text to announce in accessibility modes',
+      );
+    case 'Tik Tok':
+      return Icon(
+        FontAwesomeIcons.tiktok,
+        color: Color(int.parse(app.color)),
+        size: 24.0,
+        semanticLabel: 'Text to announce in accessibility modes',
+      );
+    case 'Youtube':
+      return Icon(
+        FontAwesomeIcons.youtube,
+        color: Color(int.parse(app.color)),
+        size: 24.0,
+        semanticLabel: 'Text to announce in accessibility modes',
+      );
+  }
+}

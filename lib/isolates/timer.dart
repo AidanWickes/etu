@@ -34,6 +34,7 @@ class CountdownTimer {
     var inSession = false;
     Duration sessionTime = new Duration(seconds: 0);
     Duration currentTime = new Duration(seconds: 0);
+    Duration overTime = new Duration(seconds: 0);
     var currentApp;
 
     Timer.periodic(
@@ -78,10 +79,9 @@ class CountdownTimer {
         if (inSession == true) {
           await apps.forEach((app) {
             if (app.name == currentApp) {
-              print(app.time);
               app.time += Duration(seconds: 10);
-              print(app.time);
               if (app.time > app.timeLimit) {
+                app.isBroken = true;
                 var message = "App: " +
                     currentApp +
                     " Time:  " +
@@ -89,18 +89,22 @@ class CountdownTimer {
                     " Limit " +
                     app.timeLimit.toString();
                 notificationPlugin.showNotification(message);
+                overTime = app.time - app.timeLimit;
+                app.points = (overTime.inMinutes * 0.2).round();
+                print(app.points);
+                // print(overTime.inMinutes * 0.2);
+              } else {
+                overTime = app.timeLimit - app.time;
+                app.points = (overTime.inMinutes * 0.2).round();
+                print(app.points);
               }
             }
-            // app["timeLimit"] = app["timeLimit"].toString();
-            // app["time"] = app["time"].toString();
           });
           var toStore = [];
           apps.forEach((app) => {toStore.add(app.toJson())});
           await storage.writeCounter(jsonEncode(toStore));
           sessionTime += Duration(seconds: 10);
         }
-        // event type 1 is opened and 2 is closed
-        // }
       },
     );
   }

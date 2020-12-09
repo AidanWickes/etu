@@ -1,11 +1,15 @@
 import 'dart:convert';
 
+import 'package:app_usage/app_usage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_picker/flutter_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:usage_stats/usage_stats.dart';
 import 'package:wellbeing_app/controllers/global.dart';
+import 'package:wellbeing_app/controllers/settingsStorage.dart';
 import 'package:wellbeing_app/controllers/storage.dart';
 import 'package:wellbeing_app/models/apps.dart';
+import 'package:wellbeing_app/models/settingsModel.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -14,13 +18,38 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
   final CounterStorage storage = CounterStorage();
-
+  final SettingsStorage settingsStorage = SettingsStorage();
   var toStore = [];
 
   @override
   void initState() {
-    storage.readCounter();
+    // storage.readCounter();
     super.initState();
+  }
+
+  Future<Duration> initUsage(String name) async {
+    UsageStats.grantUsagePermission();
+    Duration usage = new Duration();
+    try {
+      DateTime endDate = DateTime.now();
+      DateTime startDate = endDate
+          .subtract(new Duration(hours: endDate.hour, minutes: endDate.minute));
+      List<AppUsageInfo> infos = await AppUsage.getAppUsage(startDate, endDate);
+      setState(() {
+        infos.where((element) {
+          if (element.packageName == name) {
+            usage = element.usage;
+            return true;
+          } else {
+            return false;
+          }
+        });
+      });
+      return usage;
+    } on AppUsageException catch (exception) {
+      print(exception);
+    }
+    return usage;
   }
 
   Widget build(BuildContext context) {
@@ -52,6 +81,7 @@ class _SettingsState extends State<Settings> {
                         }
                         toStore.add(app.toJson());
                       });
+                      // initUsage();
                       storage.writeCounter(jsonEncode(toStore));
                       // storage.readCounter();
                     },
@@ -95,11 +125,12 @@ class _SettingsState extends State<Settings> {
           children: [
             Expanded(child: Text("Notifications")),
             Switch(
-              value: showNotifications,
+              value: settings.notifications,
               onChanged: (bool value) {
                 setState(() {
-                  showNotifications = value;
+                  settings.notifications = value;
                 });
+                settingsStorage.writeCounter(jsonEncode(settings));
               },
             )
           ],
@@ -108,11 +139,12 @@ class _SettingsState extends State<Settings> {
           children: [
             Expanded(child: Text("Consequence & Reward")),
             Switch(
-                value: rewards,
+                value: settings.rewards,
                 onChanged: (bool value) {
                   setState(() {
-                    rewards = value;
+                    settings.rewards = value;
                   });
+                  settingsStorage.writeCounter(jsonEncode(settings));
                 })
           ],
         ),
