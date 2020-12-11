@@ -80,23 +80,41 @@ class CountdownTimer {
           await apps.forEach((app) {
             if (app.name == currentApp) {
               app.time += Duration(seconds: 10);
-              if (app.time > app.timeLimit) {
-                app.isBroken = true;
-                var message = "App: " +
-                    currentApp +
-                    " Time:  " +
-                    app.time.toString() +
-                    " Limit " +
-                    app.timeLimit.toString();
+              print(app.time - app.timeLimit);
+              print(app.time);
+              print(app.timeLimit);
+              if (app.timeLimit - app.time < Duration(minutes: 5) &&
+                  app.notifications == 4) {
+                var message = "5 minutes left on " + currentApp;
+                app.timeLimit.toString();
                 notificationPlugin.showNotification(message);
+                app.notifications--;
+              }
+              if (app.time > app.timeLimit) {
+                if (app.notifications == 3) {
+                  var message = "Reached " + currentApp + " time limit.";
+                  notificationPlugin.showNotification(message);
+                  app.notifications--;
+                } else if (app.time - app.timeLimit > Duration(minutes: 5) &&
+                    app.notifications == 2) {
+                  var message = "5 minutes over on " + currentApp;
+                  notificationPlugin.showNotification(message);
+                  app.notifications--;
+                } else if (app.time - app.timeLimit > Duration(minutes: 10) &&
+                    app.notifications == 1) {
+                  var message = "10 minutes over on" + currentApp;
+                  notificationPlugin.showNotification(message);
+                  app.notifications--;
+                }
+                app.isBroken = true;
                 overTime = app.time - app.timeLimit;
                 app.points = (overTime.inMinutes * 0.2).round();
-                print(app.points);
+                // print(app.points);
                 // print(overTime.inMinutes * 0.2);
               } else {
                 overTime = app.timeLimit - app.time;
                 app.points = (overTime.inMinutes * 0.2).round();
-                print(app.points);
+                // print(app.points);
               }
             }
           });

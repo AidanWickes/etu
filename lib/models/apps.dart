@@ -13,6 +13,7 @@ class App {
   String color;
   bool isBroken;
   int points;
+  int notifications;
   App(
       {this.id,
       this.name,
@@ -24,7 +25,8 @@ class App {
       this.isExpanded,
       this.color,
       this.isBroken,
-      this.points});
+      this.points,
+      this.notifications});
 
   App.fromJson(Map<String, dynamic> json) {
     id = int.parse(json['id'].toString());
@@ -47,6 +49,7 @@ class App {
     color = json['color'];
     isBroken = json['isBroken'];
     points = int.parse(json['points'].toString());
+    notifications = json['notifications'];
   }
 
   Duration getTime(String timeLimit) {
@@ -83,6 +86,7 @@ class App {
     data['color'] = color;
     data['isBroken'] = isBroken;
     data['points'] = points;
+    data['notifications'] = notifications;
     return data;
   }
 }
@@ -99,7 +103,8 @@ List<App> initialApps = []
       isExpanded: false,
       color: '0xff4267b2',
       isBroken: false,
-      points: 0))
+      points: 0,
+      notifications: 4))
   ..add(App(
       id: 1,
       name: "Instagram",
@@ -111,7 +116,8 @@ List<App> initialApps = []
       isExpanded: false,
       color: '0xffc13584',
       isBroken: false,
-      points: 0))
+      points: 0,
+      notifications: 4))
   ..add(App(
       id: 2,
       name: "Reddit",
@@ -123,7 +129,8 @@ List<App> initialApps = []
       isExpanded: false,
       color: '0xffff4500',
       isBroken: false,
-      points: 0))
+      points: 0,
+      notifications: 4))
   ..add(App(
       id: 3,
       name: "Snapchat",
@@ -135,7 +142,8 @@ List<App> initialApps = []
       isExpanded: false,
       color: '0xfffffc00',
       isBroken: false,
-      points: 0))
+      points: 0,
+      notifications: 4))
   ..add(App(
       id: 4,
       name: "Tik Tok",
@@ -147,7 +155,8 @@ List<App> initialApps = []
       isExpanded: false,
       color: '0xff4de8f4',
       isBroken: false,
-      points: 0))
+      points: 0,
+      notifications: 4))
   ..add(App(
       id: 5,
       name: "Youtube",
@@ -159,7 +168,8 @@ List<App> initialApps = []
       isExpanded: false,
       color: '0xffff0000',
       isBroken: false,
-      points: 0));
+      points: 0,
+      notifications: 4));
 
 Icon getIcon(App app) {
   switch (app.name) {

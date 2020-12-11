@@ -12,6 +12,7 @@ class Timer extends StatefulWidget {
 class _TimerState extends State<Timer> {
   final CounterStorage storage = CounterStorage();
   List<App> _trackedApps;
+  int opens;
 
   @override
   void initState() {
@@ -20,8 +21,23 @@ class _TimerState extends State<Timer> {
 
   @override
   Widget build(BuildContext context) {
-    storage.readCounter();
-    _trackedApps = initialApps.where((i) => i.monitor).toList();
+    opens = 0;
+    _trackedApps = initialApps.where((app) {
+      var overTime;
+      if (app.isBroken) {
+        overTime = app.time - app.timeLimit;
+      } else {
+        overTime = app.timeLimit - app.time;
+      }
+      opens += app.sessions.length;
+      app.points = (overTime.inMinutes * 0.2).round();
+      if (app.points > 20) {
+        app.points = 20;
+      } else if (app.points < -20) {
+        app.points = -20;
+      }
+      return app.monitor;
+    }).toList();
     return Scaffold(
       body: Container(
           child: new ListView(
@@ -29,6 +45,15 @@ class _TimerState extends State<Timer> {
           new SizedBox(
             height: 300,
             child: DonutPieChart.withSampleData(),
+          ),
+          Column(
+            children: [
+              Text('Total Opens', style: TextStyle(fontSize: 20)),
+              Text(
+                opens.toString(),
+                style: TextStyle(fontSize: 35),
+              )
+            ],
           ),
           ExpansionPanelList(
             expansionCallback: (int index, bool isExpanded) {
@@ -52,7 +77,12 @@ class _TimerState extends State<Timer> {
                         child: Column(
                           children: [
                             Text(_trackedApps[index].name),
-                            Text(_trackedApps[index].time.toString())
+                            Text(_trackedApps[index]
+                                .time
+                                .toString()
+                                .split('.')
+                                .first
+                                .padLeft(8, "0")),
                           ],
                           crossAxisAlignment: CrossAxisAlignment.start,
                         ),
@@ -65,20 +95,34 @@ class _TimerState extends State<Timer> {
                     ListTile(
                       title: Text('Timer Status'),
                       trailing: _trackedApps[index].isBroken
-                          ? Text('true')
-                          : Text('False'),
+                          ? Icon(
+                              FontAwesomeIcons.hourglassEnd,
+                              size: 24.0,
+                              color: Color.fromRGBO(200, 0, 0, 1),
+                              semanticLabel:
+                                  'Text to announce in accessibility modes',
+                            )
+                          : Icon(
+                              FontAwesomeIcons.hourglassHalf,
+                              size: 24.0,
+                              color: Color.fromRGBO(0, 200, 0, 1),
+                              semanticLabel:
+                                  'Text to announce in accessibility modes',
+                            ),
                     ),
-                    ListTile(
-                      title: Text('Total Time'),
-                      trailing: Text(_trackedApps[index].time.toString()),
-                    ),
+                    // ListTile(
+                    //   title: Text('Total Time'),
+                    //   trailing: Text(_trackedApps[index].time.toString()),
+                    // ),
                     ListTile(
                       title: Text('Sessions'),
                       trailing:
                           Text(_trackedApps[index].sessions.length.toString()),
                     ),
                     ListTile(
-                      title: Text('Consequence'),
+                      title: _trackedApps[index].isBroken
+                          ? Text('Consequence')
+                          : Text('Reward'),
                       trailing: _trackedApps[index].isBroken
                           ? Text('-' + _trackedApps[index].points.toString())
                           : Text('+' + _trackedApps[index].points.toString()),

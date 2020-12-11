@@ -39,7 +39,7 @@ class NotificationClass {
       var platformChannelSpecifics =
           NotificationDetails(android: androidChannelSpecifics);
       await flutterLocalNotificationsPlugin.show(
-          0, 'Test Title', body, platformChannelSpecifics,
+          0, 'Warning!', body, platformChannelSpecifics,
           payload: 'Test Payload');
     }
   }
