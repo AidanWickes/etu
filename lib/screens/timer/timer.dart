@@ -115,7 +115,7 @@ class _TimerState extends State<Timer> {
                     //   trailing: Text(_trackedApps[index].time.toString()),
                     // ),
                     ListTile(
-                      title: Text('Sessions'),
+                      title: Text('Times Launched'),
                       trailing:
                           Text(_trackedApps[index].sessions.length.toString()),
                     ),
