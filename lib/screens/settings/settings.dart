@@ -54,102 +54,105 @@ class _SettingsState extends State<Settings> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(children: [
-        Row(
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
           children: [
-            Expanded(child: Text("Applications")),
-            Icon(FontAwesomeIcons.hourglass),
-          ],
-        ),
-        Column(
-          children: initialApps.map((currentObject) {
-            return Container(
-              child: Row(
-                children: <Widget>[
-                  Checkbox(
+            Row(
+              children: [
+                Expanded(child: Text("Applications")),
+                Icon(FontAwesomeIcons.hourglass),
+              ],
+            ),
+            Column(
+              children: initialApps.map((currentObject) {
+                return Container(
+                  child: Row(
+                    children: <Widget>[
+                      Checkbox(
+                        onChanged: (bool value) {
+                          setState(() {
+                            currentObject.monitor = value;
+                          });
+                          toStore = [];
+                          currentObject.timeLimit = currentObject.timeLimit;
+                          initialApps.forEach((app) {
+                            if (app.name == currentObject.name) {
+                              app.monitor = currentObject.monitor;
+                            }
+                            toStore.add(app.toJson());
+                          });
+                          // initUsage();
+                          storage.writeCounter(jsonEncode(toStore));
+                          // storage.readCounter();
+                        },
+                        value: currentObject.monitor,
+                        activeColor: Color(0xFF9FE79C),
+                      ),
+                      Expanded(child: Text(currentObject.name)),
+                      TextButton(
+                          onPressed: () => onTap(currentObject.id),
+                          child: Text(currentObject.timeLimit
+                              .toString()
+                              .split('.')
+                              .first
+                              .padLeft(8, "0"))),
+                    ],
+                  ),
+                );
+              }).toList(),
+            ),
+            Divider(
+              color: Color(0xFF78787d),
+              height: 20,
+              thickness: 1,
+              indent: 0,
+              endIndent: 0,
+            ),
+            Row(
+              children: [
+                Expanded(child: Text("Timer lock")),
+                TextButton(onPressed: null, child: Text("5 days")),
+              ],
+            ),
+            Divider(
+              color: Color(0xFF78787d),
+              height: 20,
+              thickness: 1,
+              indent: 0,
+              endIndent: 0,
+            ),
+            Row(
+              children: [
+                Expanded(child: Text("Notifications")),
+                Switch(
+                  value: settings.notifications,
+                  onChanged: (bool value) {
+                    setState(() {
+                      settings.notifications = value;
+                    });
+                    settingsStorage.writeCounter(jsonEncode(settings));
+                  },
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(child: Text("Consequence & Reward")),
+                Switch(
+                    value: settings.rewards,
                     onChanged: (bool value) {
                       setState(() {
-                        currentObject.monitor = value;
+                        settings.rewards = value;
                       });
-                      toStore = [];
-                      currentObject.timeLimit = currentObject.timeLimit;
-                      initialApps.forEach((app) {
-                        if (app.name == currentObject.name) {
-                          app.monitor = currentObject.monitor;
-                        }
-                        toStore.add(app.toJson());
-                      });
-                      // initUsage();
-                      storage.writeCounter(jsonEncode(toStore));
-                      // storage.readCounter();
-                    },
-                    value: currentObject.monitor,
-                    activeColor: Color(0xFF9FE79C),
-                  ),
-                  Expanded(child: Text(currentObject.name)),
-                  TextButton(
-                      onPressed: () => onTap(currentObject.id),
-                      child: Text(currentObject.timeLimit
-                          .toString()
-                          .split('.')
-                          .first
-                          .padLeft(8, "0"))),
-                ],
-              ),
-            );
-          }).toList(),
-        ),
-        Divider(
-          color: Color(0xFF78787d),
-          height: 20,
-          thickness: 1,
-          indent: 0,
-          endIndent: 0,
-        ),
-        Row(
-          children: [
-            Expanded(child: Text("Timer lock")),
-            TextButton(onPressed: null, child: Text("5 days")),
+                      settingsStorage.writeCounter(jsonEncode(settings));
+                    })
+              ],
+            ),
           ],
         ),
-        Divider(
-          color: Color(0xFF78787d),
-          height: 20,
-          thickness: 1,
-          indent: 0,
-          endIndent: 0,
-        ),
-        Row(
-          children: [
-            Expanded(child: Text("Notifications")),
-            Switch(
-              value: settings.notifications,
-              onChanged: (bool value) {
-                setState(() {
-                  settings.notifications = value;
-                });
-                settingsStorage.writeCounter(jsonEncode(settings));
-              },
-            )
-          ],
-        ),
-        Row(
-          children: [
-            Expanded(child: Text("Consequence & Reward")),
-            Switch(
-                value: settings.rewards,
-                onChanged: (bool value) {
-                  setState(() {
-                    settings.rewards = value;
-                  });
-                  settingsStorage.writeCounter(jsonEncode(settings));
-                })
-          ],
-        ),
-      ]),
-    ));
+      ),
+    );
   }
 
   void onTap(index) {

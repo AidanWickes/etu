@@ -9,19 +9,18 @@ import 'package:wellbeing_app/controllers/storage.dart';
 import 'package:wellbeing_app/models/apps.dart';
 
 Duration sum;
+List<App> _trackedApps;
 
-class HomeGrid extends StatefulWidget {
+class HomeGridTemp extends StatefulWidget {
   @override
-  _HomeGridState createState() => _HomeGridState();
+  _HomeGridTempState createState() => _HomeGridTempState();
 }
 
-class _HomeGridState extends State<HomeGrid> {
+class _HomeGridTempState extends State<HomeGridTemp> {
   List<EventUsageInfo> events = [];
   List<AppUsageInfo> _infos = [];
 
   var storage = new CounterStorage();
-
-  List<App> _trackedApps;
 
   @override
   void initState() {
@@ -30,9 +29,11 @@ class _HomeGridState extends State<HomeGrid> {
     super.initState();
 
     sum = Duration(hours: 0, minutes: 0);
-    for (var ii = 0; ii < initialApps.length; ii++) {
-      sum = sum + initialApps[ii].time;
+    for (var ii = 0; ii < _trackedApps.length; ii++) {
+      sum = sum + _trackedApps[ii].time;
     }
+
+    _trackedApps.sort((b, a) => a.time.compareTo(b.time));
   }
 
   Future<void> initUsage() async {
@@ -82,8 +83,10 @@ class _HomeGridState extends State<HomeGrid> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Container(),
+      body: Container(
+        child: Stack(
+          children: [for (var i = 0; i < _trackedApps.length; i++) getBox(i)],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -95,5 +98,24 @@ class _HomeGridState extends State<HomeGrid> {
         mini: true,
       ),
     );
+  }
+}
+
+Widget getBox(i) {
+  var iterable = (i + 1);
+  var widthPerc = 1 / iterable;
+
+  if (_trackedApps[i].time.inMicroseconds > 0) {
+    return FractionallySizedBox(
+      heightFactor: widthPerc,
+      widthFactor: widthPerc,
+      child: FlatButton(
+        child: Text(_trackedApps[i].name),
+        color: Color(int.parse(_trackedApps[i].color)),
+        onPressed: () {},
+      ),
+    );
+  } else {
+    return SizedBox.shrink();
   }
 }
