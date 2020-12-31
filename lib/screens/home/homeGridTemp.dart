@@ -84,8 +84,16 @@ class _HomeGridTempState extends State<HomeGridTemp> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        child: Stack(
-          children: [for (var i = 0; i < _trackedApps.length; i++) getBox(i)],
+        child: Column(
+          children: [
+            Expanded(
+              child: Stack(
+                children: [
+                  for (var i = 0; i < _trackedApps.length; i++) getBox(i)
+                ],
+              ),
+            ),
+          ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -104,15 +112,33 @@ class _HomeGridTempState extends State<HomeGridTemp> {
 Widget getBox(i) {
   var iterable = (i + 1);
   var widthPerc = 1 / iterable;
+  var alignment;
+
+  switch (iterable % 2) {
+    case 0:
+      {
+        alignment = Alignment.bottomLeft;
+      }
+      break;
+
+    case 1:
+      {
+        alignment = Alignment.bottomRight;
+      }
+      break;
+  }
 
   if (_trackedApps[i].time.inMicroseconds > 0) {
-    return FractionallySizedBox(
-      heightFactor: widthPerc,
-      widthFactor: widthPerc,
-      child: FlatButton(
-        child: Text(_trackedApps[i].name),
-        color: Color(int.parse(_trackedApps[i].color)),
-        onPressed: () {},
+    return Align(
+      alignment: alignment,
+      child: FractionallySizedBox(
+        heightFactor: widthPerc,
+        widthFactor: widthPerc,
+        child: FlatButton(
+          child: Text(_trackedApps[i].name),
+          color: Color(int.parse(_trackedApps[i].color)),
+          onPressed: () {},
+        ),
       ),
     );
   } else {

@@ -217,3 +217,20 @@ Icon getIcon(App app) {
       );
   }
 }
+
+IconData getIconForName(String iconName) {
+  switch (iconName) {
+    case 'facebook':
+      return FontAwesomeIcons.facebook;
+    case 'instagram':
+      return FontAwesomeIcons.instagram;
+    case 'reddit':
+      return FontAwesomeIcons.reddit;
+    case 'snapchat':
+      return FontAwesomeIcons.snapchat;
+    case 'tiktok':
+      return FontAwesomeIcons.tiktok;
+    case 'youtube':
+      return FontAwesomeIcons.youtube;
+  }
+}

@@ -3,7 +3,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:wellbeing_app/controllers/storage.dart';
 import 'package:wellbeing_app/models/settingsModel.dart' as metaData;
-import 'package:wellbeing_app/screens/home/home.dart';
 import 'package:wellbeing_app/screens/home/homeGrid.dart';
 import 'package:wellbeing_app/screens/home/homeGridTemp.dart';
 import 'package:wellbeing_app/screens/settings/settings.dart';
@@ -19,7 +18,7 @@ class _WrapperState extends State<Wrapper> {
   int _currentIndex = 1;
   final List<Widget> _children = [
     Timer(),
-    HomeGridTemp(),
+    HomeGrid(),
     Settings(),
   ];
 
