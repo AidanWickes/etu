@@ -130,36 +130,39 @@ class _HomeGridState extends State<HomeGrid> {
                 crossAxisCount: 2,
                 // Generate 100 widgets that display their index in the List.
                 children: List.generate(_trackedApps.length, (index) {
-                  return Card(
-                    color: Color(int.parse(_trackedApps[index].color)),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.black,
-                          width: 2,
-                        ),
-                        borderRadius: BorderRadius.circular(2.0),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          // getIcon(_trackedApps[index]),
-                          Icon(
-                            getIconForName(_trackedApps[index].listName),
+                  return GestureDetector(
+                    onTap: () {},
+                    child: Card(
+                      color: Color(int.parse(_trackedApps[index].color)),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
                             color: Colors.black,
-                            size: 50,
+                            width: 2,
                           ),
-                          Text(_trackedApps[index].name),
-                          Text((_trackedApps[index].time.inHours).toString() +
-                              "hrs " +
-                              (_trackedApps[index].time.inMinutes % 60)
-                                  .toString() +
-                              "mins " +
-                              (_trackedApps[index].time.inSeconds % 60)
-                                  .toString() +
-                              "s ")
-                        ],
+                          borderRadius: BorderRadius.circular(2.0),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            // getIcon(_trackedApps[index]),
+                            Icon(
+                              getIconForName(_trackedApps[index].listName),
+                              color: Colors.black,
+                              size: 50,
+                            ),
+                            Text(_trackedApps[index].name),
+                            Text((_trackedApps[index].time.inHours).toString() +
+                                "hrs " +
+                                (_trackedApps[index].time.inMinutes % 60)
+                                    .toString() +
+                                "mins " +
+                                (_trackedApps[index].time.inSeconds % 60)
+                                    .toString() +
+                                "s ")
+                          ],
+                        ),
                       ),
                     ),
                   );
