@@ -135,7 +135,12 @@ Widget getBox(i) {
         heightFactor: widthPerc,
         widthFactor: widthPerc,
         child: FlatButton(
-          child: Text(_trackedApps[i].name),
+          child: Column(
+            children: [
+              getIcon(_trackedApps[i]),
+              Text(_trackedApps[i].name),
+            ],
+          ),
           color: Color(int.parse(_trackedApps[i].color)),
           onPressed: () {},
         ),
