@@ -8,8 +8,11 @@ import 'package:app_usage/app_usage.dart';
 import 'package:wellbeing_app/controllers/storage.dart';
 import 'package:wellbeing_app/models/apps.dart';
 
-Duration sum;
 List<App> _trackedApps;
+Duration sum;
+var hours;
+var minutes;
+var seconds;
 
 class HomeGridTemp extends StatefulWidget {
   @override
@@ -34,6 +37,10 @@ class _HomeGridTempState extends State<HomeGridTemp> {
     }
 
     _trackedApps.sort((b, a) => a.time.compareTo(b.time));
+
+    hours = sum.inHours;
+    minutes = sum.inMinutes % 60;
+    seconds = sum.inSeconds % 60;
   }
 
   Future<void> initUsage() async {
@@ -86,6 +93,37 @@ class _HomeGridTempState extends State<HomeGridTemp> {
       body: Container(
         child: Column(
           children: [
+            Column(
+              children: [
+                Text(
+                  "Hello",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 30,
+                  ),
+                ),
+                Text.rich(
+                  TextSpan(
+                    text: 'Total Time Today: ', // default text style
+                    children: <TextSpan>[
+                      TextSpan(
+                        text: hours.toString(),
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      TextSpan(text: 'hrs '),
+                      TextSpan(
+                        text: minutes.toString(),
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      TextSpan(text: 'mins'),
+                    ],
+                  ),
+                  style: TextStyle(
+                    fontSize: 25,
+                  ),
+                ),
+              ],
+            ),
             Expanded(
               child: Stack(
                 children: [
@@ -131,18 +169,37 @@ Widget getBox(i) {
   if (_trackedApps[i].time.inMicroseconds > 0) {
     return Align(
       alignment: alignment,
-      child: FractionallySizedBox(
-        heightFactor: widthPerc,
-        widthFactor: widthPerc,
-        child: FlatButton(
-          child: Column(
-            children: [
-              getIcon(_trackedApps[i]),
-              Text(_trackedApps[i].name),
-            ],
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Colors.black,
+            width: 2,
           ),
-          color: Color(int.parse(_trackedApps[i].color)),
-          onPressed: () {},
+          borderRadius: BorderRadius.circular(2.0),
+        ),
+        child: FractionallySizedBox(
+          heightFactor: widthPerc,
+          widthFactor: widthPerc,
+          child: Positioned(
+            top: 50,
+            left: 50,
+            child: FlatButton(
+              child: Column(
+                children: [
+                  getIcon(_trackedApps[i]),
+                  Text(_trackedApps[i].name),
+                  Text((_trackedApps[i].time.inHours).toString() +
+                      "hrs " +
+                      (_trackedApps[i].time.inMinutes % 60).toString() +
+                      "mins " +
+                      (_trackedApps[i].time.inSeconds % 60).toString() +
+                      "s ")
+                ],
+              ),
+              color: Color(int.parse(_trackedApps[i].color)),
+              onPressed: () {},
+            ),
+          ),
         ),
       ),
     );
