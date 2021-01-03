@@ -26,6 +26,8 @@ class _HomeGridState extends State<HomeGrid> {
   var storage = new CounterStorage();
 
   List<App> _trackedApps;
+  List<App> _orderedApps;
+  List sizePerc = [0.0, 2.0, 4.0, 6.0, 8.0, 10.0, 12.0];
 
   @override
   void initState() {
@@ -37,6 +39,13 @@ class _HomeGridState extends State<HomeGrid> {
     for (var ii = 0; ii < initialApps.length; ii++) {
       sum = sum + initialApps[ii].time;
     }
+
+    //creates a duplicate list that is ordered by time
+    _orderedApps = _trackedApps;
+    _orderedApps.sort((b, a) => a.time.compareTo(b.time));
+
+    // _trackedApps.sort((b, a) => a.time.compareTo(b.time));
+
     hours = sum.inHours;
     minutes = sum.inMinutes % 60;
     seconds = sum.inSeconds % 60;
@@ -132,36 +141,49 @@ class _HomeGridState extends State<HomeGrid> {
                 children: List.generate(_trackedApps.length, (index) {
                   return GestureDetector(
                     onTap: () {},
-                    child: Card(
-                      color: Color(int.parse(_trackedApps[index].color)),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.black,
-                            width: 2,
-                          ),
-                          borderRadius: BorderRadius.circular(2.0),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            // getIcon(_trackedApps[index]),
-                            Icon(
-                              getIconForName(_trackedApps[index].listName),
+                    child: Padding(
+                      padding: EdgeInsets.all((1 /
+                              ((_trackedApps[index].time.inMicroseconds /
+                                      sum.inMicroseconds) *
+                                  100)) *
+                          200),
+                      child: Card(
+                        color: Color(int.parse(_trackedApps[index].color)),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
                               color: Colors.black,
-                              size: 50,
+                              width: 2,
                             ),
-                            Text(_trackedApps[index].name),
-                            Text((_trackedApps[index].time.inHours).toString() +
-                                "hrs " +
-                                (_trackedApps[index].time.inMinutes % 60)
-                                    .toString() +
-                                "mins " +
-                                (_trackedApps[index].time.inSeconds % 60)
-                                    .toString() +
-                                "s ")
-                          ],
+                            borderRadius: BorderRadius.circular(2.0),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              // getIcon(_trackedApps[index]),
+                              Icon(
+                                getIconForName(_trackedApps[index].listName),
+                                color: Colors.white,
+                                size: 50,
+                              ),
+                              Text(
+                                _trackedApps[index].name,
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              Text(
+                                (_trackedApps[index].time.inHours).toString() +
+                                    "hrs " +
+                                    (_trackedApps[index].time.inMinutes % 60)
+                                        .toString() +
+                                    "mins " +
+                                    (_trackedApps[index].time.inSeconds % 60)
+                                        .toString() +
+                                    "s ",
+                                style: TextStyle(color: Colors.white),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),

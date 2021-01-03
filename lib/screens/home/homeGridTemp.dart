@@ -148,59 +148,72 @@ class _HomeGridTempState extends State<HomeGridTemp> {
 }
 
 Widget getBox(i) {
-  var iterable = (i + 1);
-  var widthPerc = 1 / iterable;
-  var alignment;
-
-  switch (iterable % 2) {
-    case 0:
-      {
-        alignment = Alignment.bottomLeft;
-      }
-      break;
-
-    case 1:
-      {
-        alignment = Alignment.bottomRight;
-      }
-      break;
-  }
+  List heightPerc = [1.0, 0.85, 0.7, 0.55, 0.4, 0.25, 0.1];
+  List widthPerc = [1.0, 0.95, 0.9, 0.85, 0.8, 0.75, 0.7];
 
   if (_trackedApps[i].time.inMicroseconds > 0) {
     return Align(
-      alignment: alignment,
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: Colors.black,
-            width: 2,
-          ),
-          borderRadius: BorderRadius.circular(2.0),
-        ),
-        child: FractionallySizedBox(
-          heightFactor: widthPerc,
-          widthFactor: widthPerc,
-          child: Positioned(
-            top: 50,
-            left: 50,
-            child: FlatButton(
-              child: Column(
+      alignment: Alignment.bottomLeft,
+      child: FractionallySizedBox(
+        heightFactor: heightPerc[i],
+        widthFactor: widthPerc[i],
+        child: InkWell(
+          onTap: () {},
+          child: SizedBox(
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.white),
+                color: Color(int.parse(_trackedApps[i].color)),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  getIcon(_trackedApps[i]),
-                  Text(_trackedApps[i].name),
-                  Text((_trackedApps[i].time.inHours).toString() +
-                      "hrs " +
-                      (_trackedApps[i].time.inMinutes % 60).toString() +
-                      "mins " +
-                      (_trackedApps[i].time.inSeconds % 60).toString() +
-                      "s ")
+                  Icon(
+                    getIconForName(_trackedApps[i].listName),
+                    color: Colors.white,
+                  ),
+                  Text(
+                    _trackedApps[i].name,
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  Text(
+                    (_trackedApps[i].time.inHours).toString() +
+                        "hrs " +
+                        (_trackedApps[i].time.inMinutes % 60).toString() +
+                        "mins " +
+                        (_trackedApps[i].time.inSeconds % 60).toString() +
+                        "s ",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ],
               ),
-              color: Color(int.parse(_trackedApps[i].color)),
-              onPressed: () {},
             ),
           ),
         ),
+
+        // TextButton.icon(
+        //   icon: Icon(
+        //     getIconForName(_trackedApps[i].listName),
+        //     color: Colors.black,
+        //   ),
+        //   label: Row(
+        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //     children: [
+        //       Text(_trackedApps[i].name),
+        //       Text((_trackedApps[i].time.inHours).toString() +
+        //           "hrs " +
+        //           (_trackedApps[i].time.inMinutes % 60).toString() +
+        //           "mins " +
+        //           (_trackedApps[i].time.inSeconds % 60).toString() +
+        //           "s ")
+        //     ],
+        //   ),
+        //   style: TextButton.styleFrom(
+        //     backgroundColor: Color(int.parse(_trackedApps[i].color)),
+        //   ),
+        //   onPressed: () {},
+        // ),
       ),
     );
   } else {
