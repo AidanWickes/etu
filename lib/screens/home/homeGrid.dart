@@ -164,110 +164,76 @@ class _HomeGridState extends State<HomeGrid> {
     }
   }
 
+  String timerWords(index) {
+    String sentence;
+    if (_trackedApps[index].time.inSeconds == 0) {
+      sentence = "0 minutes";
+    } else if (_trackedApps[index].time.inHours == 0 &&
+        _trackedApps[index].time.inMinutes > 0) {
+      sentence =
+          (_trackedApps[index].time.inMinutes % 60).toString() + " minutes";
+    } else if (_trackedApps[index].time.inHours > 0) {
+      sentence = (_trackedApps[index].time.inHours).toString() +
+          " hours " +
+          (_trackedApps[index].time.inMinutes % 60).toString() +
+          " minutes";
+    }
+    return sentence;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Column(
-          children: [
-            Column(
-              children: [
-                Text(
-                  "Hello",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 30,
-                  ),
-                ),
-                Text.rich(
-                  TextSpan(
-                    text: 'Total Time Today: ', // default text style
-                    children: <TextSpan>[
-                      TextSpan(
-                        text: hours.toString(),
-                        style: TextStyle(fontWeight: FontWeight.bold),
+        child: GridView.count(
+          physics: NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          crossAxisCount: 2,
+          children: List.generate(_trackedApps.length, (index) {
+            return GestureDetector(
+              onTap: () {},
+              child: Padding(
+                padding: EdgeInsets.all(paddingCalc(index)),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Color(int.parse(_trackedApps[index].color)),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30),
+                      bottomLeft: Radius.circular(30),
+                      bottomRight: Radius.circular(30),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.6),
+                        spreadRadius: 2,
+                        blurRadius: 9,
+                        offset: Offset(3, 7), // changes position of shadow
                       ),
-                      TextSpan(text: 'hrs '),
-                      TextSpan(
-                        text: minutes.toString(),
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      TextSpan(text: 'mins'),
                     ],
                   ),
-                  style: TextStyle(
-                    fontSize: 25,
+                  //color: Color(int.parse(_trackedApps[index].color)),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      getIconHome(_trackedApps[index]),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        timerWords(index),
+                        style: TextStyle(
+                          color: textColor(index),
+                        ),
+                      )
+                    ],
                   ),
                 ),
-              ],
-            ),
-            Expanded(
-              child: GridView.count(
-                //physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                // Create a grid with 2 columns. If you change the scrollDirection to
-                // horizontal, this produces 2 rows.
-                crossAxisCount: 2,
-                // Generate 100 widgets that display their index in the List.
-                children: List.generate(_trackedApps.length, (index) {
-                  return GestureDetector(
-                    onTap: () {},
-                    child: Padding(
-                      padding: EdgeInsets.all(paddingCalc(index)),
-                      child: Card(
-                        color: Color(int.parse(_trackedApps[index].color)),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.black,
-                              width: 2,
-                            ),
-                            borderRadius: BorderRadius.circular(2.0),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              getIconHome(_trackedApps[index]),
-                              Text(
-                                _trackedApps[index].name,
-                                style: TextStyle(
-                                  color: textColor(index),
-                                ),
-                              ),
-                              Text(
-                                (_trackedApps[index].time.inHours).toString() +
-                                    "hrs " +
-                                    (_trackedApps[index].time.inMinutes % 60)
-                                        .toString() +
-                                    "mins " +
-                                    (_trackedApps[index].time.inSeconds % 60)
-                                        .toString() +
-                                    "s ",
-                                style: TextStyle(
-                                  color: textColor(index),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                }),
               ),
-            ),
-          ],
+            );
+          }),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          initUsage();
-        },
-        child: Icon(
-          Icons.refresh,
-        ),
-        mini: true,
       ),
     );
   }
