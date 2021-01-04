@@ -18,7 +18,7 @@ class _WrapperState extends State<Wrapper> {
   int _currentIndex = 1;
   final List<Widget> _children = [
     Timer(),
-    HomeGridTemp(),
+    HomeGrid(),
     Settings(),
   ];
 

@@ -31,7 +31,7 @@ class _HomeGridState extends State<HomeGrid> {
 
   @override
   void initState() {
-    _trackedApps = initialApps.where((i) => i.monitor).toList();
+    _trackedApps = initialApps.where((i) => i.monitor == true).toList();
     initUsage();
     super.initState();
 
@@ -44,7 +44,7 @@ class _HomeGridState extends State<HomeGrid> {
     _orderedApps = _trackedApps;
     _orderedApps.sort((b, a) => a.time.compareTo(b.time));
 
-    // _trackedApps.sort((b, a) => a.time.compareTo(b.time));
+    _trackedApps.sort((a, b) => a.listName.compareTo(b.listName));
 
     hours = sum.inHours;
     minutes = sum.inMinutes % 60;
@@ -95,6 +95,75 @@ class _HomeGridState extends State<HomeGrid> {
     }
   }
 
+  double paddingCalc(index) {
+    double padding = ((1 /
+            ((_trackedApps[index].time.inMicroseconds / sum.inMicroseconds) *
+                100)) *
+        200);
+    if (padding > 25) {
+      padding = 25;
+      return padding;
+    } else {
+      return padding;
+    }
+  }
+
+  Icon getIconHome(App app) {
+    switch (app.name) {
+      case 'Facebook':
+        return Icon(
+          FontAwesomeIcons.facebook,
+          color: Colors.white,
+          size: 50,
+          semanticLabel: 'Text to announce in accessibility modes',
+        );
+      case 'Instagram':
+        return Icon(
+          FontAwesomeIcons.instagram,
+          color: Colors.white,
+          size: 50,
+          semanticLabel: 'Text to announce in accessibility modes',
+        );
+      case 'Reddit':
+        return Icon(
+          FontAwesomeIcons.reddit,
+          color: Colors.white,
+          size: 50,
+          semanticLabel: 'Text to announce in accessibility modes',
+        );
+      case 'Snapchat':
+        return Icon(
+          FontAwesomeIcons.snapchat,
+          color: Colors.black,
+          size: 50,
+          semanticLabel: 'Text to announce in accessibility modes',
+        );
+      case 'Tik Tok':
+        return Icon(
+          FontAwesomeIcons.tiktok,
+          color: Colors.black,
+          size: 50,
+          semanticLabel: 'Text to announce in accessibility modes',
+        );
+      case 'Youtube':
+        return Icon(
+          FontAwesomeIcons.youtube,
+          color: Colors.white,
+          size: 50,
+          semanticLabel: 'Text to announce in accessibility modes',
+        );
+    }
+  }
+
+  Color textColor(index) {
+    if (_trackedApps[index].listName == "snapchat" ||
+        _trackedApps[index].listName == "tiktok") {
+      return Colors.black;
+    } else {
+      return Colors.white;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -134,6 +203,8 @@ class _HomeGridState extends State<HomeGrid> {
             ),
             Expanded(
               child: GridView.count(
+                //physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
                 // Create a grid with 2 columns. If you change the scrollDirection to
                 // horizontal, this produces 2 rows.
                 crossAxisCount: 2,
@@ -142,11 +213,7 @@ class _HomeGridState extends State<HomeGrid> {
                   return GestureDetector(
                     onTap: () {},
                     child: Padding(
-                      padding: EdgeInsets.all((1 /
-                              ((_trackedApps[index].time.inMicroseconds /
-                                      sum.inMicroseconds) *
-                                  100)) *
-                          200),
+                      padding: EdgeInsets.all(paddingCalc(index)),
                       child: Card(
                         color: Color(int.parse(_trackedApps[index].color)),
                         child: Container(
@@ -161,15 +228,12 @@ class _HomeGridState extends State<HomeGrid> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              // getIcon(_trackedApps[index]),
-                              Icon(
-                                getIconForName(_trackedApps[index].listName),
-                                color: Colors.white,
-                                size: 50,
-                              ),
+                              getIconHome(_trackedApps[index]),
                               Text(
                                 _trackedApps[index].name,
-                                style: TextStyle(color: Colors.white),
+                                style: TextStyle(
+                                  color: textColor(index),
+                                ),
                               ),
                               Text(
                                 (_trackedApps[index].time.inHours).toString() +
@@ -180,7 +244,9 @@ class _HomeGridState extends State<HomeGrid> {
                                     (_trackedApps[index].time.inSeconds % 60)
                                         .toString() +
                                     "s ",
-                                style: TextStyle(color: Colors.white),
+                                style: TextStyle(
+                                  color: textColor(index),
+                                ),
                               )
                             ],
                           ),
