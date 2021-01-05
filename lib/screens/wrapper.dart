@@ -8,7 +8,6 @@ import 'package:wellbeing_app/controllers/storage.dart';
 import 'package:wellbeing_app/models/apps.dart';
 import 'package:wellbeing_app/models/settingsModel.dart' as metaData;
 import 'package:wellbeing_app/screens/home/homeGrid.dart';
-import 'package:wellbeing_app/screens/home/homeGridTemp.dart';
 import 'package:wellbeing_app/screens/settings/settings.dart';
 import 'package:wellbeing_app/screens/timer/timer.dart';
 
