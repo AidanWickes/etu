@@ -1,7 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:wellbeing_app/controllers/global.dart';
 
 import 'package:wellbeing_app/controllers/storage.dart';
+import 'package:wellbeing_app/models/apps.dart';
 import 'package:wellbeing_app/models/settingsModel.dart' as metaData;
 import 'package:wellbeing_app/screens/home/homeGrid.dart';
 import 'package:wellbeing_app/screens/home/homeGridTemp.dart';
@@ -16,15 +20,66 @@ class Wrapper extends StatefulWidget {
 class _WrapperState extends State<Wrapper> {
   var storage = new CounterStorage();
   int _currentIndex = 1;
+  Duration totalTime;
+  Duration sum;
   final List<Widget> _children = [
     Timer(),
-    HomeGrid(),
+    HomeGridTemp(),
     Settings(),
   ];
 
   void initState() {
     storage.readCounter();
     super.initState();
+    initialApps.forEach((App app) {
+      if (app.monitor && app.time.inMilliseconds > 0 && sum != null) {
+        sum = new Duration(
+            milliseconds: sum.inMilliseconds + app.time.inMilliseconds);
+      } else if (app.monitor) {
+        sum = new Duration(milliseconds: app.time.inMilliseconds);
+      }
+    });
+    var mIndex = [];
+    if (sum.inMinutes >= 165) {
+      mIndex.add(0);
+    }
+    if (sum.inMinutes >= 120) {
+      mIndex.add(1);
+      mIndex.add(2);
+    }
+    if (sum.inMinutes >= 90) {
+      mIndex.add(3);
+    }
+    if (sum.inMinutes >= 60) {
+      mIndex.add(4);
+      mIndex.add(5);
+    }
+    if (sum.inMinutes >= 40) {
+      mIndex.add(6);
+    }
+    if (sum.inMinutes >= 30) {
+      mIndex.add(7);
+    }
+    if (sum.inMinutes >= 20) {
+      mIndex.add(8);
+    }
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      int message = mIndex[Random().nextInt(mIndex.length)];
+      showDialog(
+          context: context,
+          builder: (_) => new AlertDialog(
+                title: new Text("Lets Reflect."),
+                content: new Text(messages[message]),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text('OK'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  )
+                ],
+              ));
+    });
   }
 
   void displayBottomSheet(BuildContext context) {
@@ -54,25 +109,30 @@ class _WrapperState extends State<Wrapper> {
                 ),
                 Text("Consequence & Reward Log"),
                 TextButton(onPressed: null, child: Text("Redeem")),
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Icon(
-                          FontAwesomeIcons.instagram,
-                          color: Colors.pink,
-                          size: 24.0,
-                          semanticLabel:
-                              'Text to announce in accessibility modes',
-                        ),
-                      ),
-                      Expanded(child: Text("Timer Exceeded")),
-                      Text("-6")
-                    ]),
-                  ),
-                ),
+                metaData.settings.history.length > 0
+                    ? Column(
+                        children:
+                            metaData.settings.history.map((currentObject) {
+                          Card(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: getIcon(currentObject),
+                                ),
+                                Expanded(child: Text("Timer Exceeded")),
+                                currentObject.isBroken
+                                    ? Text(
+                                        '-' + currentObject.points.toString())
+                                    : Text(
+                                        '+' + currentObject.points.toString()),
+                              ]),
+                            ),
+                          );
+                        }).toList(),
+                      )
+                    : SizedBox.shrink(),
               ]));
         });
   }
