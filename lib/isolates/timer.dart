@@ -42,40 +42,42 @@ class CountdownTimer {
       (timer) async {
         var storage = new CounterStorage();
         List<App> apps = await storage.readCounter();
-
+        UsageStats.grantUsagePermission();
         DateTime endDate = DateTime.now();
         DateTime startDate = endDate.subtract(new Duration(seconds: 10));
         // List<AppUsageInfo> infos =
         //     await AppUsage.getAppUsage(startDate, endDate);
-        List<EventUsageInfo> events =
-            await UsageStats.queryEvents(startDate, endDate);
-        // print(timer.tick);
-        // print(events.reversed.toList());
-        events.forEach((element) {
-          apps.forEach((app) {
-            if (element.eventType == '1' &&
-                element.packageName.contains(app.listName)) {
-              print(app.name.toString() + " session started");
-              currentApp = app.name;
-              if (inSession == false) {
-                inSession = true;
-                sessionTime = new Duration(seconds: 0);
-                if (app.time.toString() != '0') {
-                  return currentTime = app.time;
-                } else {
-                  return currentTime = new Duration(seconds: 0);
+        if (await UsageStats.checkUsagePermission()) {
+          List<EventUsageInfo> events =
+              await UsageStats.queryEvents(startDate, endDate);
+          // print(timer.tick);
+          // print(events.reversed.toList());
+          events.forEach((element) {
+            apps.forEach((app) {
+              if (element.eventType == '1' &&
+                  element.packageName.contains(app.listName)) {
+                print(app.name.toString() + " session started");
+                currentApp = app.name;
+                if (inSession == false) {
+                  inSession = true;
+                  sessionTime = new Duration(seconds: 0);
+                  if (app.time.toString() != '0') {
+                    return currentTime = app.time;
+                  } else {
+                    return currentTime = new Duration(seconds: 0);
+                  }
                 }
+              } else if (element.eventType != '1' &&
+                  element.packageName.contains(app.listName) &&
+                  inSession &&
+                  currentApp == app.name) {
+                app.sessions.add(sessionTime);
+                inSession = false;
+                currentApp = '';
               }
-            } else if (element.eventType != '1' &&
-                element.packageName.contains(app.listName) &&
-                inSession &&
-                currentApp == app.name) {
-              app.sessions.add(sessionTime);
-              inSession = false;
-              currentApp = '';
-            }
+            });
           });
-        });
+        }
         if (inSession == true) {
           await apps.forEach((app) {
             if (app.name == currentApp) {

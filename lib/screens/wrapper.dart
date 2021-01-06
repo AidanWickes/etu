@@ -40,28 +40,30 @@ class _WrapperState extends State<Wrapper> {
       }
     });
     var mIndex = [];
-    if (sum.inMinutes >= 165) {
-      mIndex.add(0);
-    }
-    if (sum.inMinutes >= 120) {
-      mIndex.add(1);
-      mIndex.add(2);
-    }
-    if (sum.inMinutes >= 90) {
-      mIndex.add(3);
-    }
-    if (sum.inMinutes >= 60) {
-      mIndex.add(4);
-      mIndex.add(5);
-    }
-    if (sum.inMinutes >= 40) {
-      mIndex.add(6);
-    }
-    if (sum.inMinutes >= 30) {
-      mIndex.add(7);
-    }
-    if (sum.inMinutes >= 20) {
-      mIndex.add(8);
+    if (sum != null) {
+      if (sum.inMinutes >= 165) {
+        mIndex.add(0);
+      }
+      if (sum.inMinutes >= 120) {
+        mIndex.add(1);
+        mIndex.add(2);
+      }
+      if (sum.inMinutes >= 90) {
+        mIndex.add(3);
+      }
+      if (sum.inMinutes >= 60) {
+        mIndex.add(4);
+        mIndex.add(5);
+      }
+      if (sum.inMinutes >= 40) {
+        mIndex.add(6);
+      }
+      if (sum.inMinutes >= 30) {
+        mIndex.add(7);
+      }
+      if (sum.inMinutes >= 20) {
+        mIndex.add(8);
+      }
     }
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       int message = mIndex[Random().nextInt(mIndex.length)];

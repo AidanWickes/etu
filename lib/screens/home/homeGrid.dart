@@ -53,7 +53,7 @@ class _HomeGridState extends State<HomeGrid> {
 
   Future<void> initUsage() async {
     UsageStats.grantUsagePermission();
-    try {
+    if (await UsageStats.checkUsagePermission()) {
       DateTime endDate = DateTime.now();
       DateTime startDate = endDate
           .subtract(new Duration(hours: endDate.hour, minutes: endDate.minute));
@@ -90,8 +90,6 @@ class _HomeGridState extends State<HomeGrid> {
           });
         });
       });
-    } on AppUsageException catch (exception) {
-      print(exception);
     }
   }
 

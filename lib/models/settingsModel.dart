@@ -7,7 +7,11 @@ class Settings {
   bool rewards;
   List<App> history;
   Settings(
-      {this.lastLaunched, this.totalPoints, this.notifications, this.rewards});
+      {this.lastLaunched,
+      this.totalPoints,
+      this.notifications,
+      this.rewards,
+      this.history});
 
   Settings.fromJson(Map<String, dynamic> json) {
     lastLaunched = DateTime.parse(json['lastLaunched'].toString());
@@ -45,4 +49,5 @@ Settings settings = new Settings(
     lastLaunched: DateTime.now(),
     totalPoints: 0,
     notifications: true,
-    rewards: true);
+    rewards: true,
+    history: initialApps);
