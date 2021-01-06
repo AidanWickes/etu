@@ -55,8 +55,17 @@ class _HomeGridState extends State<HomeGrid> {
     UsageStats.grantUsagePermission();
     if (await UsageStats.checkUsagePermission()) {
       DateTime endDate = DateTime.now();
-      DateTime startDate = endDate
-          .subtract(new Duration(hours: endDate.hour, minutes: endDate.minute));
+      DateTime startDate = endDate.subtract(
+          new Duration(hours: endDate.hour - 3, minutes: endDate.minute));
+      var test =
+          await UsageStats.queryAndAggregateUsageStats(startDate, endDate);
+      var testDuration = new Duration();
+      test.keys.forEach((element) {
+        if (element.contains('youtube')) {
+          testDuration = new Duration(
+              milliseconds: int.parse(test[element].totalTimeInForeground));
+        }
+      });
       List<AppUsageInfo> infos = await AppUsage.getAppUsage(startDate, endDate);
       setState(() {
         _infos.clear();
@@ -84,6 +93,8 @@ class _HomeGridState extends State<HomeGrid> {
                   toStore.add(app.toJson());
                 });
                 storage.writeCounter(jsonEncode(toStore));
+                print(testDuration);
+                print(element.usage);
                 return _infos.add(element);
               }
             }

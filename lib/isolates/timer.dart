@@ -55,7 +55,8 @@ class CountdownTimer {
           events.forEach((element) {
             apps.forEach((app) {
               if (element.eventType == '1' &&
-                  element.packageName.contains(app.listName)) {
+                  element.packageName.contains(app.listName) &&
+                  app.monitor) {
                 print(app.name.toString() + " session started");
                 currentApp = app.name;
                 if (inSession == false) {
@@ -70,7 +71,8 @@ class CountdownTimer {
               } else if (element.eventType != '1' &&
                   element.packageName.contains(app.listName) &&
                   inSession &&
-                  currentApp == app.name) {
+                  currentApp == app.name &&
+                  app.monitor) {
                 app.sessions.add(sessionTime);
                 inSession = false;
                 currentApp = '';
