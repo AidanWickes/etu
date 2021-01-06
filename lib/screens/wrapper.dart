@@ -7,7 +7,7 @@ import 'package:wellbeing_app/controllers/global.dart';
 import 'package:wellbeing_app/controllers/storage.dart';
 import 'package:wellbeing_app/models/apps.dart';
 import 'package:wellbeing_app/models/settingsModel.dart' as metaData;
-import 'package:wellbeing_app/screens/home/homeGridTest.dart';
+// import 'package:wellbeing_app/screens/home/homeGridTest.dart';
 import 'package:wellbeing_app/screens/home/homeGrid.dart';
 import 'package:wellbeing_app/screens/settings/settings.dart';
 import 'package:wellbeing_app/screens/timer/timer.dart';
@@ -24,7 +24,7 @@ class _WrapperState extends State<Wrapper> {
   Duration sum;
   final List<Widget> _children = [
     Timer(),
-    HomeGridTemp(),
+    HomeGrid(),
     Settings(),
   ];
 
