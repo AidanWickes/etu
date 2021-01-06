@@ -14,12 +14,12 @@ var hours;
 var minutes;
 var seconds;
 
-class HomeGrid extends StatefulWidget {
+class HomeGridTest extends StatefulWidget {
   @override
-  _HomeGridState createState() => _HomeGridState();
+  _HomeGridTestState createState() => _HomeGridTestState();
 }
 
-class _HomeGridState extends State<HomeGrid> {
+class _HomeGridTestState extends State<HomeGridTest> {
   List<EventUsageInfo> events = [];
   List<AppUsageInfo> _infos = [];
 
@@ -192,45 +192,51 @@ class _HomeGridState extends State<HomeGrid> {
           children: List.generate(_trackedApps.length, (index) {
             return GestureDetector(
               onTap: () {},
-              child: Padding(
-                padding: EdgeInsets.all(paddingCalc(index)),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Color(int.parse(_trackedApps[index].color)),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(30),
-                      topRight: Radius.circular(30),
-                      bottomLeft: Radius.circular(30),
-                      bottomRight: Radius.circular(30),
-                    ),
-                    // boxShadow: [
-                    //   BoxShadow(
-                    //     color: Colors.grey.withOpacity(0.6),
-                    //     spreadRadius: 2,
-                    //     blurRadius: 9,
-                    //     offset: Offset(3, 7), // changes position of shadow
-                    //   ),
-                    // ],
-                  ),
-                  //color: Color(int.parse(_trackedApps[index].color)),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      getIconHome(_trackedApps[index]),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Text(
-                        timerWords(index),
-                        style: TextStyle(
-                          color: textColor(index),
-                        ),
-                      )
-                    ],
-                  ),
+              child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25),
                 ),
+                child: Container(),
               ),
+              // Padding(
+              //   padding: EdgeInsets.all(paddingCalc(index)),
+              //   child: Container(
+              //     decoration: BoxDecoration(
+              //       color: Color(int.parse(_trackedApps[index].color)),
+              //       borderRadius: BorderRadius.only(
+              //         topLeft: Radius.circular(30),
+              //         topRight: Radius.circular(30),
+              //         bottomLeft: Radius.circular(30),
+              //         bottomRight: Radius.circular(30),
+              //       ),
+              //       boxShadow: [
+              //         BoxShadow(
+              //           color: Colors.grey.withOpacity(0.6),
+              //           spreadRadius: 2,
+              //           blurRadius: 9,
+              //           offset: Offset(3, 7), // changes position of shadow
+              //         ),
+              //       ],
+              //     ),
+              //     //color: Color(int.parse(_trackedApps[index].color)),
+              //     child: Column(
+              //       mainAxisAlignment: MainAxisAlignment.center,
+              //       crossAxisAlignment: CrossAxisAlignment.center,
+              //       children: [
+              //         getIconHome(_trackedApps[index]),
+              //         SizedBox(
+              //           height: 20,
+              //         ),
+              //         Text(
+              //           timerWords(index),
+              //           style: TextStyle(
+              //             color: textColor(index),
+              //           ),
+              //         )
+              //       ],
+              //     ),
+              //   ),
+              // ),
             );
           }),
         ),
