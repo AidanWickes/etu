@@ -31,6 +31,7 @@ class SettingsStorage {
         fromJson.lastLaunched = DateTime.now();
         await writeCounter(jsonEncode(fromJson));
         var toStore = [];
+        settings.history = initialApps;
         initialApps.forEach((App app) {
           if (app.isBroken) {
             settings.totalPoints -= app.points;
