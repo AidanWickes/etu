@@ -164,7 +164,7 @@ class _HomeGridState extends State<HomeGrid> {
 
   String timerWords(index) {
     String sentence;
-    if (_trackedApps[index].time.inSeconds == 0) {
+    if (_trackedApps[index].time.inMinutes == 0) {
       sentence = "0 minutes";
     } else if (_trackedApps[index].time.inHours == 0 &&
         _trackedApps[index].time.inMinutes > 0) {
@@ -179,59 +179,102 @@ class _HomeGridState extends State<HomeGrid> {
     return sentence;
   }
 
+  Widget generateGrid() {
+    if (_trackedApps.length == 0) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          RichText(
+            text: TextSpan(
+              text: 'Welcome to ',
+              style: TextStyle(
+                fontSize: 50,
+                color: Colors.black,
+              ),
+              children: <TextSpan>[
+                TextSpan(
+                    text: 'etu', style: TextStyle(fontWeight: FontWeight.bold)),
+                TextSpan(text: '!'),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          RichText(
+            textAlign: TextAlign.center,
+            text: TextSpan(
+              text: 'Click on the ',
+              style: DefaultTextStyle.of(context).style,
+              children: <TextSpan>[
+                TextSpan(
+                    text: 'Settings',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+                TextSpan(text: ' page to choose which apps to track!'),
+              ],
+            ),
+          ),
+        ],
+      );
+    } else {
+      return GridView.count(
+        physics: NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        crossAxisCount: 2,
+        children: List.generate(_trackedApps.length, (index) {
+          return GestureDetector(
+            onTap: () {},
+            child: Padding(
+              padding: EdgeInsets.all(paddingCalc(index)),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Color(int.parse(_trackedApps[index].color)),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30),
+                    bottomLeft: Radius.circular(30),
+                    bottomRight: Radius.circular(30),
+                  ),
+                  // boxShadow: [
+                  //   BoxShadow(
+                  //     color: Colors.grey.withOpacity(0.6),
+                  //     spreadRadius: 2,
+                  //     blurRadius: 9,
+                  //     offset: Offset(3, 7), // changes position of shadow
+                  //   ),
+                  // ],
+                ),
+                //color: Color(int.parse(_trackedApps[index].color)),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    getIconHome(_trackedApps[index]),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      timerWords(index),
+                      style: TextStyle(
+                        color: textColor(index),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          );
+        }),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: GridView.count(
-          physics: NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          crossAxisCount: 2,
-          children: List.generate(_trackedApps.length, (index) {
-            return GestureDetector(
-              onTap: () {},
-              child: Padding(
-                padding: EdgeInsets.all(paddingCalc(index)),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Color(int.parse(_trackedApps[index].color)),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(30),
-                      topRight: Radius.circular(30),
-                      bottomLeft: Radius.circular(30),
-                      bottomRight: Radius.circular(30),
-                    ),
-                    // boxShadow: [
-                    //   BoxShadow(
-                    //     color: Colors.grey.withOpacity(0.6),
-                    //     spreadRadius: 2,
-                    //     blurRadius: 9,
-                    //     offset: Offset(3, 7), // changes position of shadow
-                    //   ),
-                    // ],
-                  ),
-                  //color: Color(int.parse(_trackedApps[index].color)),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      getIconHome(_trackedApps[index]),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Text(
-                        timerWords(index),
-                        style: TextStyle(
-                          color: textColor(index),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            );
-          }),
-        ),
+        child: generateGrid(),
       ),
     );
   }
