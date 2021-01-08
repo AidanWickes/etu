@@ -27,21 +27,24 @@ class SettingsStorage {
       var test = jsonDecode(contents);
 
       var fromJson = Settings.fromJson(test);
-      if (fromJson.lastLaunched.day != settings.lastLaunched.day) {
+      if (fromJson.lastLaunched.day != DateTime.now().day) {
         fromJson.lastLaunched = DateTime.now();
         await writeCounter(jsonEncode(fromJson));
         var toStore = [];
-        settings.history = initialApps;
+        fromJson.history = initialApps;
         initialApps.forEach((App app) {
           if (app.isBroken) {
-            settings.totalPoints -= app.points;
+            fromJson.totalPoints -= app.points;
           } else {
-            settings.totalPoints += app.points;
+            fromJson.totalPoints += app.points;
           }
           app.points = 0;
           app.isBroken = false;
           toStore.add(app.toJson());
         });
+        fromJson.lastLaunched = DateTime.now();
+        settings = fromJson;
+        await writeCounter(jsonEncode(fromJson));
         var storage = new CounterStorage();
         // initUsage();
         storage.writeCounter(jsonEncode(toStore));

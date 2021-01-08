@@ -96,7 +96,7 @@ List<App> initialApps = []
       id: 0,
       name: "Facebook",
       monitor: false,
-      listName: "facebook",
+      listName: "facebook.katana",
       time: Duration(hours: 0, minutes: 0),
       timeLimit: Duration(hours: 0, minutes: 0),
       sessions: [],

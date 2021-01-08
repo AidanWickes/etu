@@ -29,6 +29,8 @@ class _HomeGridState extends State<HomeGrid> {
   List<App> _orderedApps;
   List sizePerc = [0.0, 2.0, 4.0, 6.0, 8.0, 10.0, 12.0];
 
+  bool loaded = false;
+
   @override
   void initState() {
     _trackedApps = initialApps.where((i) => i.monitor == true).toList();
@@ -51,56 +53,83 @@ class _HomeGridState extends State<HomeGrid> {
     seconds = sum.inSeconds % 60;
   }
 
+  Future<void> refreshApps() async {
+    _trackedApps = initialApps.where((i) => i.monitor == true).toList();
+
+    _orderedApps = _trackedApps;
+    _orderedApps.sort((b, a) => a.time.compareTo(b.time));
+
+    _trackedApps.sort((a, b) => a.listName.compareTo(b.listName));
+  }
+
   Future<void> initUsage() async {
     UsageStats.grantUsagePermission();
     if (await UsageStats.checkUsagePermission()) {
-      DateTime endDate = DateTime.now();
-      DateTime startDate = endDate.subtract(
-          new Duration(hours: endDate.hour - 3, minutes: endDate.minute));
-      var test =
-          await UsageStats.queryAndAggregateUsageStats(startDate, endDate);
-      var testDuration = new Duration();
-      test.keys.forEach((element) {
-        if (element.contains('youtube')) {
-          testDuration = new Duration(
-              milliseconds: int.parse(test[element].totalTimeInForeground));
-        }
+      var tempApps = initialApps;
+      tempApps.forEach((element) {
+        element.sessions.clear();
       });
-      List<AppUsageInfo> infos = await AppUsage.getAppUsage(startDate, endDate);
+      var trackedEvents = [];
+      DateTime endDate = DateTime.now();
+      DateTime startDate = endDate.subtract(new Duration(
+          hours: endDate.hour,
+          minutes: endDate.minute,
+          seconds: endDate.second,
+          milliseconds: endDate.millisecond,
+          microseconds: endDate.microsecond));
+      var eventTest = await UsageStats.queryEvents(startDate, endDate);
+      var eventTest3 = await UsageStats.queryUsageStats(startDate, endDate);
+      for (var i = 0; i < eventTest.length; i++) {
+        tempApps.forEach((App app) {
+          if (eventTest[i].packageName.contains(app.listName) &&
+              app.monitor &&
+              eventTest[i].eventType == '1') {
+            var dateTime = DateTime.fromMillisecondsSinceEpoch(
+                int.parse(eventTest[i].timeStamp));
+            trackedEvents.add(eventTest[i - 1]);
+            if (eventTest[i + 1].packageName.contains(app.listName) &&
+                eventTest[i + 2].packageName.contains(app.listName) &&
+                !eventTest[i - 2].packageName.contains(app.listName)) {
+              app.sessions
+                  .add(new Duration(milliseconds: dateTime.millisecond));
+            }
+          }
+        });
+      }
       setState(() {
-        _infos.clear();
-        infos.forEach((element) {
-          initialApps.forEach((appElement) {
-            if (element.packageName == appElement.listName &&
-                appElement.monitor) {
-              var toStore = [];
-              initialApps.forEach((app) {
-                if (app.name == appElement.name) {
-                  app.time = element.usage;
-                }
-                toStore.add(app.toJson());
-              });
-              storage.writeCounter(jsonEncode(toStore));
-              return _infos.add(element);
-            } else if (appElement.listName == "youtube") {
-              if (element.appName == appElement.listName &&
-                  appElement.monitor) {
-                var toStore = [];
-                initialApps.forEach((app) {
-                  if (app.name == appElement.name) {
-                    app.time = element.usage;
-                  }
-                  toStore.add(app.toJson());
-                });
-                storage.writeCounter(jsonEncode(toStore));
-                print(testDuration);
-                print(element.usage);
-                return _infos.add(element);
+        var toStore = [];
+        eventTest3.forEach((element) {
+          tempApps.forEach((App app) {
+            if (element.packageName.contains(app.listName) && app.monitor) {
+              var time = new Duration(
+                  milliseconds: int.parse(element.totalTimeInForeground));
+              app.time = time;
+              var overTime;
+              if (app.timeLimit - app.time < Duration(minutes: 0)) {
+                app.isBroken = true;
+              }
+              if (app.isBroken) {
+                overTime = app.time - app.timeLimit;
+              } else {
+                overTime = app.timeLimit - app.time;
+              }
+              app.points = (overTime.inMinutes * 0.2).round();
+              if (app.points > 20) {
+                app.points = 20;
+              } else if (app.points < -20) {
+                app.points = -20;
               }
             }
           });
         });
+        tempApps.forEach((App app) {
+          toStore.add(app.toJson());
+        });
+        tempApps = initialApps;
+        storage.writeCounter(jsonEncode(toStore));
       });
+      await refreshApps();
+      loaded = true;
     }
   }
 
@@ -230,63 +259,55 @@ class _HomeGridState extends State<HomeGrid> {
       );
     } else {
       return GridView.count(
-        physics: NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        crossAxisCount: 2,
-        children: List.generate(_trackedApps.length, (index) {
-          return GestureDetector(
-            onTap: () {},
-            child: Padding(
-              padding: EdgeInsets.all(paddingCalc(index)),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Color(int.parse(_trackedApps[index].color)),
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30),
-                    bottomLeft: Radius.circular(30),
-                    bottomRight: Radius.circular(30),
-                  ),
-                  // boxShadow: [
-                  //   BoxShadow(
-                  //     color: Colors.grey.withOpacity(0.6),
-                  //     spreadRadius: 2,
-                  //     blurRadius: 9,
-                  //     offset: Offset(3, 7), // changes position of shadow
-                  //   ),
-                  // ],
-                ),
-                //color: Color(int.parse(_trackedApps[index].color)),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    getIconHome(_trackedApps[index]),
-                    SizedBox(
-                      height: 20,
+          physics: NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          crossAxisCount: 2,
+          children: List.generate(_trackedApps.length, (index) {
+            return GestureDetector(
+              onTap: () {},
+              child: Padding(
+                padding: EdgeInsets.all(paddingCalc(index)),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Color(int.parse(_trackedApps[index].color)),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30),
+                      bottomLeft: Radius.circular(30),
+                      bottomRight: Radius.circular(30),
                     ),
-                    Text(
-                      timerWords(index),
-                      style: TextStyle(
-                        color: textColor(index),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      getIconHome(_trackedApps[index]),
+                      SizedBox(
+                        height: 20,
                       ),
-                    )
-                  ],
+                      Text(
+                        timerWords(index),
+                        style: TextStyle(
+                          color: textColor(index),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
-            ),
-          );
-        }),
-      );
+            );
+          }));
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: generateGrid(),
-      ),
+      body: loaded
+          ? Center(
+              child: generateGrid(),
+            )
+          : SizedBox.shrink(),
     );
   }
 }

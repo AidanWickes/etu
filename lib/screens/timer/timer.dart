@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:wellbeing_app/controllers/donut_chart.dart';
 import 'package:wellbeing_app/controllers/storage.dart';
 import 'package:wellbeing_app/models/apps.dart';
+import 'package:wellbeing_app/models/settingsModel.dart';
 
 class Timer extends StatefulWidget {
   @override
@@ -119,14 +120,18 @@ class _TimerState extends State<Timer> {
                       trailing:
                           Text(_trackedApps[index].sessions.length.toString()),
                     ),
-                    ListTile(
-                      title: _trackedApps[index].isBroken
-                          ? Text('Consequence')
-                          : Text('Reward'),
-                      trailing: _trackedApps[index].isBroken
-                          ? Text('-' + _trackedApps[index].points.toString())
-                          : Text('+' + _trackedApps[index].points.toString()),
-                    ),
+                    settings.rewards
+                        ? ListTile(
+                            title: _trackedApps[index].isBroken
+                                ? Text('Consequence')
+                                : Text('Reward'),
+                            trailing: _trackedApps[index].isBroken
+                                ? Text(
+                                    '-' + _trackedApps[index].points.toString())
+                                : Text('+' +
+                                    _trackedApps[index].points.toString()),
+                          )
+                        : SizedBox.shrink(),
                   ],
                 ),
                 isExpanded: _trackedApps[index].isExpanded,

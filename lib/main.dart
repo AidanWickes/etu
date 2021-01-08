@@ -11,17 +11,16 @@ import 'models/apps.dart';
 
 var timer = new CountdownTimer();
 var storage = new CounterStorage();
-var settingsStorage = new SettingsStorage();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   var isStorage = await storage.readCounter();
   if (isStorage[0] == "Error") {
     await storage.writeCounter(jsonEncode(initialApps));
-    await settingsStorage.writeCounter(jsonEncode(settings));
+    await SettingsStorage().writeCounter(jsonEncode(settings));
   }
   await storage.readCounter();
-  await settingsStorage.readSettings();
+  await SettingsStorage().readSettings();
   await timer.start();
   //Timer.main();
   runApp(MyApp());

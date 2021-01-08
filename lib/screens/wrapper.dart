@@ -17,7 +17,7 @@ class Wrapper extends StatefulWidget {
   _WrapperState createState() => _WrapperState();
 }
 
-class _WrapperState extends State<Wrapper> {
+class _WrapperState extends State<Wrapper> with WidgetsBindingObserver {
   var storage = new CounterStorage();
   int _currentIndex = 1;
   Duration totalTime;
@@ -28,9 +28,12 @@ class _WrapperState extends State<Wrapper> {
     Settings(),
   ];
 
+  bool isShown = true;
+
   void initState() {
     storage.readCounter();
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     initialApps.forEach((App app) {
       if (app.monitor && app.time.inMilliseconds > 0 && sum != null) {
         sum = new Duration(
@@ -84,6 +87,25 @@ class _WrapperState extends State<Wrapper> {
     });
   }
 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    setState(() {
+      if (state == AppLifecycleState.resumed) {
+        isShown = true;
+      } else {
+        isShown = false;
+      }
+    });
+    print(state);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
   void displayBottomSheet(BuildContext context) {
     showDialog(
         context: context,
@@ -134,7 +156,11 @@ class _WrapperState extends State<Wrapper> {
                                         child: getIcon(
                                             metaData.settings.history[index]),
                                       ),
-                                      Expanded(child: Text("Timer Exceeded")),
+                                      Expanded(
+                                          child: metaData.settings
+                                                  .history[index].isBroken
+                                              ? Text("Timer Exceeded")
+                                              : Text("Timer Stuck To")),
                                       metaData.settings.history[index].isBroken
                                           ? Text('-' +
                                               metaData.settings.history[index]
@@ -188,24 +214,26 @@ class _WrapperState extends State<Wrapper> {
             backgroundColor: Color(0xFF083D77),
             elevation: 0.0,
             actions: [
-              FlatButton.icon(
-                  // shape: RoundedRectangleBorder(
-                  //     borderRadius: BorderRadius.circular(100.0),
-                  //     side: BorderSide(color: Color(0xFF2CA5B5))),
-                  // color: Color(0xFF2CA5B5),
-                  // padding: EdgeInsets.all(10.0),
-                  onPressed: () => displayBottomSheet(context),
-                  icon: FaIcon(FontAwesomeIcons.coins,
-                      size: 20, color: Color(0xFFE8CE22)),
-                  label: Text(metaData.settings.totalPoints.toString(),
-                      style: TextStyle(
-                          color: Color(0xFFE8CE22),
-                          fontWeight: FontWeight.w300,
-                          fontFamily: 'Nunito',
-                          fontSize: 25)))
+              metaData.settings.rewards
+                  ? FlatButton.icon(
+                      // shape: RoundedRectangleBorder(
+                      //     borderRadius: BorderRadius.circular(100.0),
+                      //     side: BorderSide(color: Color(0xFF2CA5B5))),
+                      // color: Color(0xFF2CA5B5),
+                      // padding: EdgeInsets.all(10.0),
+                      onPressed: () => displayBottomSheet(context),
+                      icon: FaIcon(FontAwesomeIcons.coins,
+                          size: 20, color: Color(0xFFE8CE22)),
+                      label: Text(metaData.settings.totalPoints.toString(),
+                          style: TextStyle(
+                              color: Color(0xFFE8CE22),
+                              fontWeight: FontWeight.w300,
+                              fontFamily: 'Nunito',
+                              fontSize: 25)))
+                  : SizedBox.shrink()
             ],
           )),
-      body: _children[_currentIndex],
+      body: isShown ? _children[_currentIndex] : SizedBox.shrink(),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Color(0xFF083D77),
         onTap: onTabTapped,

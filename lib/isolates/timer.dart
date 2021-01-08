@@ -73,7 +73,7 @@ class CountdownTimer {
                   inSession &&
                   currentApp == app.name &&
                   app.monitor) {
-                app.sessions.add(sessionTime);
+                // app.sessions.add(sessionTime);
                 inSession = false;
                 currentApp = '';
               }
