@@ -85,58 +85,90 @@ class _WrapperState extends State<Wrapper> {
   }
 
   void displayBottomSheet(BuildContext context) {
-    showModalBottomSheet(
+    showDialog(
         context: context,
-        builder: (ctx) {
-          return Container(
-              height: MediaQuery.of(context).size.height * 0.9,
-              padding: EdgeInsets.all(16.0),
-              child: Column(children: <Widget>[
-                Center(
-                  child: FlatButton.icon(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(100.0),
-                          side: BorderSide(color: Color(0xFF2CA5B5))),
-                      color: Color(0xFF2CA5B5),
-                      // padding: EdgeInsets.all(10.0),
-                      onPressed: () {},
-                      icon: FaIcon(FontAwesomeIcons.coins,
-                          size: 20, color: Color(0xFFE8CE22)),
-                      label: Text(metaData.settings.totalPoints.toString(),
-                          style: TextStyle(
-                              color: Color(0xFFE8CE22),
-                              fontWeight: FontWeight.w300,
-                              fontFamily: 'Nunito',
-                              fontSize: 25))),
-                ),
-                Text("Consequence & Reward Log"),
-                TextButton(onPressed: null, child: Text("Redeem")),
-                metaData.settings.history.length > 0
-                    ? Column(
-                        children:
-                            metaData.settings.history.map((currentObject) {
-                          Card(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: getIcon(currentObject),
-                                ),
-                                Expanded(child: Text("Timer Exceeded")),
-                                currentObject.isBroken
-                                    ? Text(
-                                        '-' + currentObject.points.toString())
-                                    : Text(
-                                        '+' + currentObject.points.toString()),
-                              ]),
-                            ),
-                          );
-                        }).toList(),
-                      )
-                    : SizedBox.shrink(),
-              ]));
-        });
+        builder: (_) => new AlertDialog(
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text('OK'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  )
+                ],
+                insetPadding:
+                    EdgeInsets.only(left: 0, top: 55, bottom: 65, right: 0),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
+                content: Column(children: <Widget>[
+                  Center(
+                    child: FlatButton.icon(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(100.0),
+                            side: BorderSide(color: Color(0xFF2CA5B5))),
+                        color: Color(0xFF2CA5B5),
+                        // padding: EdgeInsets.all(10.0),
+                        onPressed: () {},
+                        icon: FaIcon(FontAwesomeIcons.coins,
+                            size: 20, color: Color(0xFFE8CE22)),
+                        label: Text(metaData.settings.totalPoints.toString(),
+                            style: TextStyle(
+                                color: Color(0xFFE8CE22),
+                                fontWeight: FontWeight.w300,
+                                fontFamily: 'Nunito',
+                                fontSize: 25))),
+                  ),
+                  Text("Consequence & Reward Log"),
+                  TextButton(onPressed: null, child: Text("Redeem")),
+                  metaData.settings.history.length > 0
+                      ? Column(
+                          children: List.generate(
+                              metaData.settings.history.length, (index) {
+                          return metaData.settings.history[index].monitor
+                              ? Card(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(children: <Widget>[
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: getIcon(
+                                            metaData.settings.history[index]),
+                                      ),
+                                      Expanded(child: Text("Timer Exceeded")),
+                                      metaData.settings.history[index].isBroken
+                                          ? Text('-' +
+                                              metaData.settings.history[index]
+                                                  .points
+                                                  .toString())
+                                          : Text('+' +
+                                              metaData.settings.history[index]
+                                                  .points
+                                                  .toString()),
+                                    ]),
+                                  ),
+                                )
+                              : SizedBox.shrink();
+                        }))
+                      // children: metaData.settings.history.map((App currentObject) {
+                      //   Card(
+                      //     child: Padding(
+                      //       padding: const EdgeInsets.all(8.0),
+                      //       child: Row(children: <Widget>[
+                      //         Padding(
+                      //           padding: const EdgeInsets.all(8.0),
+                      //           child: getIcon(currentObject),
+                      //         ),
+                      //         Expanded(child: Text("Timer Exceeded")),
+                      //         currentObject.isBroken
+                      //             ? Text('-' + currentObject.points.toString())
+                      //             : Text('+' + currentObject.points.toString()),
+                      //       ]),
+                      //     ),
+                      //   );
+                      // }).toList(),
+                      // )
+                      : SizedBox.shrink(),
+                ])));
   }
 
   @override
