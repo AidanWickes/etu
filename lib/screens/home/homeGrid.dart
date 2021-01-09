@@ -134,10 +134,15 @@ class _HomeGridState extends State<HomeGrid> {
   }
 
   double paddingCalc(index) {
-    double padding = ((1 /
-            ((_trackedApps[index].time.inMicroseconds / sum.inMicroseconds) *
-                100)) *
-        200);
+    double padding;
+    if (sum.inMinutes == 0) {
+      padding = 8;
+    } else {
+      padding =
+          ((1 / ((_trackedApps[index].time.inMinutes / sum.inMinutes) * 100)) *
+              200);
+    }
+
     if (padding > 25) {
       padding = 25;
       return padding;
@@ -225,16 +230,26 @@ class _HomeGridState extends State<HomeGrid> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          Image.asset(
+            'assets/images/etuLogo.png',
+            height: 150,
+            width: 150,
+          ),
           RichText(
             text: TextSpan(
               text: 'Welcome to ',
               style: TextStyle(
+                fontFamily: 'Quicksand',
                 fontSize: 50,
-                color: Colors.black,
+                color: Color(0xFF2CA5B5),
               ),
               children: <TextSpan>[
                 TextSpan(
-                    text: 'etu', style: TextStyle(fontWeight: FontWeight.bold)),
+                  text: 'etu',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 TextSpan(text: '!'),
               ],
             ),
@@ -242,17 +257,21 @@ class _HomeGridState extends State<HomeGrid> {
           SizedBox(
             height: 20,
           ),
-          RichText(
-            textAlign: TextAlign.center,
-            text: TextSpan(
-              text: 'Click on the ',
-              style: DefaultTextStyle.of(context).style,
-              children: <TextSpan>[
-                TextSpan(
-                    text: 'Settings',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-                TextSpan(text: ' page to choose which apps to track!'),
-              ],
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(vertical: 0.0, horizontal: 32.0),
+            child: RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                text: 'Click on the ',
+                style: DefaultTextStyle.of(context).style,
+                children: <TextSpan>[
+                  TextSpan(
+                      text: 'Settings',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  TextSpan(text: ' page to choose which apps to track!'),
+                ],
+              ),
             ),
           ),
         ],

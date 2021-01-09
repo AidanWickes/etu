@@ -66,6 +66,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
 
   assets:
+    - assets/images/etuLogo.png
     - assets/images/bubblesIcon.png
     - assets/images/bubblesIconActive.png
 
