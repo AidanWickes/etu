@@ -14,6 +14,7 @@ class App {
   bool isBroken;
   int points;
   int notifications;
+  bool locked;
   App(
       {this.id,
       this.name,
@@ -26,7 +27,8 @@ class App {
       this.color,
       this.isBroken,
       this.points,
-      this.notifications});
+      this.notifications,
+      this.locked});
 
   App.fromJson(Map<String, dynamic> json) {
     id = int.parse(json['id'].toString());
@@ -50,6 +52,7 @@ class App {
     isBroken = json['isBroken'];
     points = int.parse(json['points'].toString());
     notifications = json['notifications'];
+    locked = json['locked'];
   }
 
   Duration getTime(String timeLimit) {
@@ -87,6 +90,7 @@ class App {
     data['isBroken'] = isBroken;
     data['points'] = points;
     data['notifications'] = notifications;
+    data['locked'] = locked;
     return data;
   }
 }
@@ -104,7 +108,8 @@ List<App> initialApps = []
       color: '0xff4267b2',
       isBroken: false,
       points: 0,
-      notifications: 4))
+      notifications: 4,
+      locked: false))
   ..add(App(
       id: 1,
       name: "Instagram",
@@ -117,7 +122,8 @@ List<App> initialApps = []
       color: '0xffc13584',
       isBroken: false,
       points: 0,
-      notifications: 4))
+      notifications: 4,
+      locked: false))
   ..add(App(
       id: 2,
       name: "Reddit",
@@ -130,7 +136,8 @@ List<App> initialApps = []
       color: '0xffff4500',
       isBroken: false,
       points: 0,
-      notifications: 4))
+      notifications: 4,
+      locked: false))
   ..add(App(
       id: 3,
       name: "Snapchat",
@@ -143,12 +150,13 @@ List<App> initialApps = []
       color: '0xfffffc00',
       isBroken: false,
       points: 0,
-      notifications: 4))
+      notifications: 4,
+      locked: false))
   ..add(App(
       id: 4,
       name: "Tik Tok",
       monitor: false,
-      listName: "tiktok",
+      listName: "musically",
       time: Duration(hours: 0, minutes: 0),
       timeLimit: Duration(hours: 0, minutes: 0),
       sessions: [],
@@ -156,7 +164,8 @@ List<App> initialApps = []
       color: '0xff4de8f4',
       isBroken: false,
       points: 0,
-      notifications: 4))
+      notifications: 4,
+      locked: false))
   ..add(App(
       id: 5,
       name: "Youtube",
@@ -169,7 +178,8 @@ List<App> initialApps = []
       color: '0xffff0000',
       isBroken: false,
       points: 0,
-      notifications: 4));
+      notifications: 4,
+      locked: false));
 
 Icon getIcon(App app) {
   switch (app.name) {
@@ -177,42 +187,42 @@ Icon getIcon(App app) {
       return Icon(
         FontAwesomeIcons.facebook,
         color: Color(int.parse(app.color)),
-        size: 24.0,
+        size: 40.0,
         semanticLabel: 'Text to announce in accessibility modes',
       );
     case 'Instagram':
       return Icon(
         FontAwesomeIcons.instagram,
         color: Color(int.parse(app.color)),
-        size: 24.0,
+        size: 40,
         semanticLabel: 'Text to announce in accessibility modes',
       );
     case 'Reddit':
       return Icon(
         FontAwesomeIcons.reddit,
         color: Color(int.parse(app.color)),
-        size: 24.0,
+        size: 40,
         semanticLabel: 'Text to announce in accessibility modes',
       );
     case 'Snapchat':
       return Icon(
         FontAwesomeIcons.snapchat,
         color: Color(int.parse(app.color)),
-        size: 24.0,
+        size: 40,
         semanticLabel: 'Text to announce in accessibility modes',
       );
     case 'Tik Tok':
       return Icon(
         FontAwesomeIcons.tiktok,
         color: Color(int.parse(app.color)),
-        size: 24.0,
+        size: 40,
         semanticLabel: 'Text to announce in accessibility modes',
       );
     case 'Youtube':
       return Icon(
         FontAwesomeIcons.youtube,
         color: Color(int.parse(app.color)),
-        size: 24.0,
+        size: 40,
         semanticLabel: 'Text to announce in accessibility modes',
       );
   }

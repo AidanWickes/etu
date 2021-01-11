@@ -35,7 +35,11 @@ class NotificationClass {
     if (settings.notifications) {
       await flutterLocalNotificationsPlugin.initialize(initializationSettings);
       var androidChannelSpecifics = AndroidNotificationDetails(
-          'channelId', 'channelName', 'channelDescription');
+          'channelId', 'channelName', 'channelDescription',
+          priority: Priority.high,
+          visibility: NotificationVisibility.public,
+          importance: Importance.max,
+          ticker: 'test');
       var platformChannelSpecifics =
           NotificationDetails(android: androidChannelSpecifics);
       await flutterLocalNotificationsPlugin.show(

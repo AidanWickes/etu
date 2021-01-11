@@ -49,12 +49,19 @@ class _TimerState extends State<Timer> {
           ),
           Column(
             children: [
-              Text('Total Opens', style: TextStyle(fontSize: 20)),
+              Text('Total Opens',
+                  style: TextStyle(fontSize: 20, color: Color(0xFF083D77))),
               Text(
                 opens.toString(),
                 style: TextStyle(fontSize: 35),
               )
             ],
+          ),
+          Divider(
+            color: Colors.white,
+            height: 10,
+            indent: 0,
+            endIndent: 0,
           ),
           ExpansionPanelList(
             expansionCallback: (int index, bool isExpanded) {
@@ -77,13 +84,16 @@ class _TimerState extends State<Timer> {
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
                           children: [
-                            Text(_trackedApps[index].name),
-                            Text(_trackedApps[index]
-                                .time
-                                .toString()
-                                .split('.')
-                                .first
-                                .padLeft(8, "0")),
+                            Text(_trackedApps[index].name,
+                                style: TextStyle(color: Color(0xFF083D77))),
+                            Text(
+                                _trackedApps[index]
+                                    .time
+                                    .toString()
+                                    .split('.')
+                                    .first
+                                    .padLeft(8, "0"),
+                                style: TextStyle(color: Color(0xFF083D77))),
                           ],
                           crossAxisAlignment: CrossAxisAlignment.start,
                         ),
@@ -94,19 +104,20 @@ class _TimerState extends State<Timer> {
                 body: Column(
                   children: [
                     ListTile(
-                      title: Text('Timer Status'),
+                      title: Text('Timer Status',
+                          style: TextStyle(color: Color(0xFF083D77))),
                       trailing: _trackedApps[index].isBroken
                           ? Icon(
                               FontAwesomeIcons.hourglassEnd,
                               size: 24.0,
-                              color: Color.fromRGBO(200, 0, 0, 1),
+                              color: Color(0xFF78787D),
                               semanticLabel:
                                   'Text to announce in accessibility modes',
                             )
                           : Icon(
                               FontAwesomeIcons.hourglassHalf,
                               size: 24.0,
-                              color: Color.fromRGBO(0, 200, 0, 1),
+                              color: Color(0xFF083D77),
                               semanticLabel:
                                   'Text to announce in accessibility modes',
                             ),
@@ -116,20 +127,26 @@ class _TimerState extends State<Timer> {
                     //   trailing: Text(_trackedApps[index].time.toString()),
                     // ),
                     ListTile(
-                      title: Text('Times Launched'),
-                      trailing:
-                          Text(_trackedApps[index].sessions.length.toString()),
+                      title: Text('Times Launched',
+                          style: TextStyle(color: Color(0xFF083D77))),
+                      trailing: Text(
+                          _trackedApps[index].sessions.length.toString(),
+                          style: TextStyle(color: Color(0xFF083D77))),
                     ),
                     settings.rewards
                         ? ListTile(
                             title: _trackedApps[index].isBroken
-                                ? Text('Consequence')
-                                : Text('Reward'),
+                                ? Text('Consequence',
+                                    style: TextStyle(color: Color(0xFF083D77)))
+                                : Text('Reward',
+                                    style: TextStyle(color: Color(0xFF083D77))),
                             trailing: _trackedApps[index].isBroken
                                 ? Text(
-                                    '-' + _trackedApps[index].points.toString())
-                                : Text('+' +
-                                    _trackedApps[index].points.toString()),
+                                    '-' + _trackedApps[index].points.toString(),
+                                    style: TextStyle(color: Color(0xFF083D77)))
+                                : Text(
+                                    '+' + _trackedApps[index].points.toString(),
+                                    style: TextStyle(color: Color(0xFF083D77))),
                           )
                         : SizedBox.shrink(),
                   ],

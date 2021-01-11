@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:wellbeing_app/controllers/global.dart';
+import 'package:wellbeing_app/controllers/settingsStorage.dart';
 
 import 'package:wellbeing_app/controllers/storage.dart';
 import 'package:wellbeing_app/models/apps.dart';
@@ -34,12 +35,17 @@ class _WrapperState extends State<Wrapper> with WidgetsBindingObserver {
     storage.readCounter();
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    showReflectDialog();
+  }
+
+  showReflectDialog() {
+    sum = new Duration(minutes: 0);
     initialApps.forEach((App app) {
-      if (app.monitor && app.time.inMilliseconds > 0 && sum != null) {
-        sum = new Duration(
+      if (app.monitor && app.time.inMilliseconds > 0 || sum != null) {
+        return sum = new Duration(
             milliseconds: sum.inMilliseconds + app.time.inMilliseconds);
       } else if (app.monitor) {
-        sum = new Duration(milliseconds: app.time.inMilliseconds);
+        return sum = new Duration(milliseconds: app.time.inMilliseconds);
       }
     });
     var mIndex = [];
@@ -68,23 +74,25 @@ class _WrapperState extends State<Wrapper> with WidgetsBindingObserver {
         mIndex.add(8);
       }
     }
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      int message = mIndex[Random().nextInt(mIndex.length)];
-      showDialog(
-          context: context,
-          builder: (_) => new AlertDialog(
-                title: new Text("Lets Reflect."),
-                content: new Text(messages[message]),
-                actions: <Widget>[
-                  FlatButton(
-                    child: Text('OK'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  )
-                ],
-              ));
-    });
+    if (mIndex.length > 0) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        int message = mIndex[Random().nextInt(mIndex.length)];
+        showDialog(
+            context: context,
+            builder: (_) => new AlertDialog(
+                  title: new Text("Lets Reflect."),
+                  content: new Text(messages[message]),
+                  actions: <Widget>[
+                    FlatButton(
+                      child: Text('OK'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    )
+                  ],
+                ));
+      });
+    }
   }
 
   @override
@@ -93,6 +101,10 @@ class _WrapperState extends State<Wrapper> with WidgetsBindingObserver {
     setState(() {
       if (state == AppLifecycleState.resumed) {
         isShown = true;
+        storage.readCounter();
+        SettingsStorage().readSettings();
+        _currentIndex = 1;
+        showReflectDialog();
       } else {
         isShown = false;
       }
@@ -109,92 +121,110 @@ class _WrapperState extends State<Wrapper> with WidgetsBindingObserver {
   void displayBottomSheet(BuildContext context) {
     showDialog(
         context: context,
-        builder: (_) => new AlertDialog(
-                actions: <Widget>[
-                  FlatButton(
-                    child: Text('OK'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  )
-                ],
-                insetPadding:
-                    EdgeInsets.only(left: 0, top: 55, bottom: 65, right: 0),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20)),
-                content: Column(children: <Widget>[
-                  Center(
-                    child: FlatButton.icon(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(100.0),
-                            side: BorderSide(color: Color(0xFF2CA5B5))),
-                        color: Color(0xFF2CA5B5),
-                        // padding: EdgeInsets.all(10.0),
-                        onPressed: () {},
-                        icon: FaIcon(FontAwesomeIcons.coins,
-                            size: 20, color: Color(0xFFE8CE22)),
-                        label: Text(metaData.settings.totalPoints.toString(),
-                            style: TextStyle(
-                                color: Color(0xFFE8CE22),
-                                fontWeight: FontWeight.w300,
-                                fontFamily: 'Nunito',
-                                fontSize: 25))),
-                  ),
-                  Text("Consequence & Reward Log"),
-                  TextButton(onPressed: null, child: Text("Redeem")),
-                  metaData.settings.history.length > 0
-                      ? Column(
-                          children: List.generate(
-                              metaData.settings.history.length, (index) {
-                          return metaData.settings.history[index].monitor
-                              ? Card(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Row(children: <Widget>[
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: getIcon(
-                                            metaData.settings.history[index]),
-                                      ),
-                                      Expanded(
-                                          child: metaData.settings
-                                                  .history[index].isBroken
-                                              ? Text("Timer Exceeded")
-                                              : Text("Timer Stuck To")),
-                                      metaData.settings.history[index].isBroken
-                                          ? Text('-' +
-                                              metaData.settings.history[index]
-                                                  .points
-                                                  .toString())
-                                          : Text('+' +
-                                              metaData.settings.history[index]
-                                                  .points
-                                                  .toString()),
-                                    ]),
-                                  ),
-                                )
-                              : SizedBox.shrink();
-                        }))
-                      // children: metaData.settings.history.map((App currentObject) {
-                      //   Card(
-                      //     child: Padding(
-                      //       padding: const EdgeInsets.all(8.0),
-                      //       child: Row(children: <Widget>[
-                      //         Padding(
-                      //           padding: const EdgeInsets.all(8.0),
-                      //           child: getIcon(currentObject),
-                      //         ),
-                      //         Expanded(child: Text("Timer Exceeded")),
-                      //         currentObject.isBroken
-                      //             ? Text('-' + currentObject.points.toString())
-                      //             : Text('+' + currentObject.points.toString()),
-                      //       ]),
-                      //     ),
-                      //   );
-                      // }).toList(),
-                      // )
-                      : SizedBox.shrink(),
-                ])));
+        builder: (_) => new Dialog(
+            insetPadding:
+                EdgeInsets.only(left: 20, right: 20, top: 50, bottom: 50),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            // child: Padding(
+            //     padding: EdgeInsets.all(10),
+            child: Column(children: <Widget>[
+              Divider(
+                color: Colors.white,
+                height: 10,
+                indent: 0,
+                endIndent: 0,
+              ),
+              Center(
+                child: FlatButton.icon(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(100.0),
+                        side: BorderSide(color: Color(0xFF2CA5B5))),
+                    color: Color(0xFF2CA5B5),
+                    // padding: EdgeInsets.all(10.0),
+                    onPressed: () {},
+                    icon: FaIcon(FontAwesomeIcons.coins,
+                        size: 30, color: Color(0xFFE8CE22)),
+                    label: Text(metaData.settings.totalPoints.toString(),
+                        style: TextStyle(
+                            color: Color(0xFFE8CE22),
+                            fontWeight: FontWeight.w300,
+                            fontFamily: 'Nunito',
+                            fontSize: 30))),
+              ),
+              Divider(
+                color: Colors.white,
+                height: 10,
+                indent: 0,
+                endIndent: 0,
+              ),
+              Text("Consequence & Reward Log"),
+              TextButton(
+                  onPressed: null,
+                  child: Text(
+                    "Redeem",
+                    style: TextStyle(color: Color(0xFF083D77)),
+                  )),
+              metaData.settings.history.length > 0
+                  ? Column(
+                      children: List.generate(metaData.settings.history.length,
+                          (index) {
+                      return metaData.settings.history[index].monitor
+                          ? Padding(
+                              padding:
+                                  EdgeInsets.only(top: 2, left: 10, right: 10),
+                              child: Card(
+                                color: Color.fromRGBO(240, 240, 240, 1),
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.only(left: 0, right: 10),
+                                  child: Row(children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: getIcon(
+                                          metaData.settings.history[index]),
+                                    ),
+                                    Expanded(
+                                        child: metaData.settings.history[index]
+                                                .isBroken
+                                            ? Text("Timer exceeded")
+                                            : Text("Timer achieved")),
+                                    metaData.settings.history[index].isBroken
+                                        ? Text('-' +
+                                            metaData
+                                                .settings.history[index].points
+                                                .toString())
+                                        : Text('+' +
+                                            metaData
+                                                .settings.history[index].points
+                                                .toString()),
+                                  ]),
+                                ),
+                              ))
+                          : SizedBox.shrink();
+                    }))
+                  // children: metaData.settings.history.map((App currentObject) {
+                  //   Card(
+                  //     child: Padding(
+                  //       padding: const EdgeInsets.all(8.0),
+                  //       child: Row(children: <Widget>[
+                  //         Padding(
+                  //           padding: const EdgeInsets.all(8.0),
+                  //           child: getIcon(currentObject),
+                  //         ),
+                  //         Expanded(child: Text("Timer Exceeded")),
+                  //         currentObject.isBroken
+                  //             ? Text('-' + currentObject.points.toString())
+                  //             : Text('+' + currentObject.points.toString()),
+                  //       ]),
+                  //     ),
+                  //   );
+                  // }).toList(),
+                  // )
+                  : SizedBox.shrink(),
+            ]))
+        //           ),
+        );
   }
 
   @override
@@ -216,11 +246,6 @@ class _WrapperState extends State<Wrapper> with WidgetsBindingObserver {
             actions: [
               metaData.settings.rewards
                   ? FlatButton.icon(
-                      // shape: RoundedRectangleBorder(
-                      //     borderRadius: BorderRadius.circular(100.0),
-                      //     side: BorderSide(color: Color(0xFF2CA5B5))),
-                      // color: Color(0xFF2CA5B5),
-                      // padding: EdgeInsets.all(10.0),
                       onPressed: () => displayBottomSheet(context),
                       icon: FaIcon(FontAwesomeIcons.coins,
                           size: 20, color: Color(0xFFE8CE22)),

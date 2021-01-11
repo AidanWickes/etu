@@ -29,25 +29,35 @@ class SettingsStorage {
       var fromJson = Settings.fromJson(test);
       if (fromJson.lastLaunched.day != DateTime.now().day) {
         fromJson.lastLaunched = DateTime.now();
+        fromJson.lock--;
+        if (fromJson.lock <= 0) {
+          fromJson.lock = 0;
+          fromJson.isLocked = false;
+        } else {
+          fromJson.isLocked = true;
+        }
         await writeCounter(jsonEncode(fromJson));
-        var toStore = [];
-        fromJson.history = initialApps;
+        fromJson.history = await CounterStorage().readCounter();
         initialApps.forEach((App app) {
           if (app.isBroken) {
             fromJson.totalPoints -= app.points;
           } else {
             fromJson.totalPoints += app.points;
           }
+        });
+        await writeCounter(jsonEncode(fromJson));
+        var toStore = [];
+        initialApps.forEach((app) {
+          if (fromJson.lock == 0) {
+            app.locked = false;
+          }
           app.points = 0;
           app.isBroken = false;
+          app.notifications = 4;
           toStore.add(app.toJson());
         });
-        fromJson.lastLaunched = DateTime.now();
-        settings = fromJson;
-        await writeCounter(jsonEncode(fromJson));
-        var storage = new CounterStorage();
         // initUsage();
-        storage.writeCounter(jsonEncode(toStore));
+        CounterStorage().writeCounter(jsonEncode(toStore));
       }
 
       // var fromJson = App.fromJson(test);

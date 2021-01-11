@@ -6,12 +6,16 @@ class Settings {
   bool notifications;
   bool rewards;
   List<App> history;
+  int lock;
+  bool isLocked;
   Settings(
       {this.lastLaunched,
       this.totalPoints,
       this.notifications,
       this.rewards,
-      this.history});
+      this.history,
+      this.lock,
+      this.isLocked});
 
   Settings.fromJson(Map<String, dynamic> json) {
     lastLaunched = DateTime.parse(json['lastLaunched'].toString());
@@ -28,6 +32,8 @@ class Settings {
       });
       history = convertedApps;
     }
+    lock = json['lock'];
+    isLocked = json['isLocked'];
   }
 
   Map<String, dynamic> toJson() {
@@ -41,6 +47,8 @@ class Settings {
       convertedApps.add(element.toJson());
     });
     data['history'] = convertedApps;
+    data['lock'] = lock;
+    data['isLocked'] = isLocked;
     return data;
   }
 }
@@ -50,4 +58,6 @@ Settings settings = new Settings(
     totalPoints: 0,
     notifications: true,
     rewards: true,
-    history: initialApps);
+    history: initialApps,
+    lock: 0,
+    isLocked: false);

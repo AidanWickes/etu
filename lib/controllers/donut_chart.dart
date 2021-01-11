@@ -12,7 +12,7 @@ class DonutPieChart extends StatelessWidget {
   factory DonutPieChart.withSampleData() {
     return new DonutPieChart(
       _createPurchaseData(),
-      animate: true,
+      animate: false,
     );
   }
 

@@ -25,18 +25,26 @@ class _HomeGridState extends State<HomeGrid> {
 
   var storage = new CounterStorage();
 
-  List<App> _trackedApps;
+  List<App> _trackedApps = [];
   List<App> _orderedApps;
   List sizePerc = [0.0, 2.0, 4.0, 6.0, 8.0, 10.0, 12.0];
 
   bool loaded = false;
+
+  bool inSession = false;
+  String currentApp;
+  DateTime dateTime;
+
+  var event;
 
   @override
   void initState() {
     _trackedApps = initialApps.where((i) => i.monitor == true).toList();
     initUsage();
     super.initState();
+  }
 
+  Future<void> refreshApps() async {
     sum = Duration(hours: 0, minutes: 0);
     for (var ii = 0; ii < initialApps.length; ii++) {
       sum = sum + initialApps[ii].time;
@@ -51,9 +59,6 @@ class _HomeGridState extends State<HomeGrid> {
     hours = sum.inHours;
     minutes = sum.inMinutes % 60;
     seconds = sum.inSeconds % 60;
-  }
-
-  Future<void> refreshApps() async {
     _trackedApps = initialApps.where((i) => i.monitor == true).toList();
 
     _orderedApps = _trackedApps;
@@ -68,6 +73,7 @@ class _HomeGridState extends State<HomeGrid> {
       var tempApps = initialApps;
       tempApps.forEach((element) {
         element.sessions.clear();
+        element.time = new Duration(microseconds: 0);
       });
       var trackedEvents = [];
       DateTime endDate = DateTime.now();
@@ -84,44 +90,137 @@ class _HomeGridState extends State<HomeGrid> {
           if (eventTest[i].packageName.contains(app.listName) &&
               app.monitor &&
               eventTest[i].eventType == '1') {
-            var dateTime = DateTime.fromMillisecondsSinceEpoch(
+            dateTime = DateTime.fromMillisecondsSinceEpoch(
                 int.parse(eventTest[i].timeStamp));
-            trackedEvents.add(eventTest[i - 1]);
-            if (eventTest[i + 1].packageName.contains(app.listName) &&
-                eventTest[i + 2].packageName.contains(app.listName) &&
-                !eventTest[i - 2].packageName.contains(app.listName)) {
-              app.sessions
-                  .add(new Duration(milliseconds: dateTime.millisecond));
+            inSession = true;
+            currentApp = app.name;
+            event = eventTest[i];
+            print('session started');
+            // if (eventTest[i].eventType == '1') {
+            //   print(app.name);
+            //   if (app.sessions.length > 0) {
+            //     var testTime = new DateTime(DateTime.now().year,
+            //         DateTime.now().month, DateTime.now().day);
+            //     var lastTime =
+            //         testTime.add(app.sessions[app.sessions.length - 1]);
+            //     var dif = dateTime.difference(lastTime);
+            //     print(dif.toString());
+            //     if (dif.inSeconds > 5) {
+            //       print('new launch');
+            //       app.sessions.add(new Duration(
+            //           hours: dateTime.hour,
+            //           minutes: dateTime.minute,
+            //           seconds: dateTime.second,
+            //           microseconds: dateTime.microsecond,
+            //           milliseconds: dateTime.millisecond));
+            //     }
+            //   } else {
+            //     app.sessions.add(new Duration(
+            //         hours: dateTime.hour,
+            //         minutes: dateTime.minute,
+            //         seconds: dateTime.second,
+            //         microseconds: dateTime.microsecond,
+            //         milliseconds: dateTime.millisecond));
+            //   }
+            // }
+          } else if (eventTest[i].eventType != '1' &&
+              eventTest[i].packageName.contains(app.listName) &&
+              inSession &&
+              currentApp == app.name &&
+              app.monitor) {
+            var newDate = DateTime.fromMillisecondsSinceEpoch(
+                int.parse(eventTest[i].timeStamp));
+            // app.sessions.add(sessionTime);
+            var sessionTime = newDate.difference(dateTime);
+            if (sessionTime.inSeconds > 1) {
+              app.time = app.time + sessionTime;
+              app.sessions.add(sessionTime);
+              // trackedEvents.add(eventTest[i]);
+              trackedEvents.add(event);
+              event = '';
             }
+            inSession = false;
+            currentApp = '';
+            print('session ended');
           }
         });
       }
       setState(() {
         var toStore = [];
-        eventTest3.forEach((element) {
-          tempApps.forEach((App app) {
-            if (element.packageName.contains(app.listName) && app.monitor) {
-              var time = new Duration(
-                  milliseconds: int.parse(element.totalTimeInForeground));
-              app.time = time;
-              var overTime;
-              if (app.timeLimit - app.time < Duration(minutes: 0)) {
-                app.isBroken = true;
-              }
-              if (app.isBroken) {
-                overTime = app.time - app.timeLimit;
-              } else {
-                overTime = app.timeLimit - app.time;
-              }
-              app.points = (overTime.inMinutes * 0.2).round();
-              if (app.points > 20) {
-                app.points = 20;
-              } else if (app.points < -20) {
-                app.points = -20;
-              }
-            }
-          });
+
+        tempApps.forEach((App app) {
+          var overTime;
+          var dif = app.timeLimit - app.time;
+          if (app.timeLimit - app.time < Duration(seconds: 0)) {
+            app.isBroken = true;
+          } else {
+            app.isBroken = false;
+          }
+          if (app.isBroken) {
+            overTime = app.time - app.timeLimit;
+          } else {
+            overTime = app.timeLimit - app.time;
+          }
+          app.points = (overTime.inMinutes * 0.2).round();
+          if (app.points > 20) {
+            app.points = 20;
+          } else if (app.points < -20) {
+            app.points = -20;
+          }
         });
+
+        // for (var i = 0; i < eventTest3.length; i++) {
+        // tempApps.forEach((App app) {
+        //   if (eventTest3[i].packageName.contains(app.listName) &&
+        //       app.monitor) {
+        //     var time = new Duration(
+        //         milliseconds: int.parse(eventTest3[i].totalTimeInForeground));
+        //     app.time = time;
+        //     var overTime;
+        //     var dif = app.timeLimit - app.time;
+        //     if (app.timeLimit - app.time < Duration(seconds: 0)) {
+        //       app.isBroken = true;
+        //     } else {
+        //       app.isBroken = false;
+        //     }
+        //     if (app.isBroken) {
+        //       overTime = app.time - app.timeLimit;
+        //     } else {
+        //       overTime = app.timeLimit - app.time;
+        //     }
+        //     app.points = (overTime.inMinutes * 0.2).round();
+        //     if (app.points > 20) {
+        //       app.points = 20;
+        //     } else if (app.points < -20) {
+        //       app.points = -20;
+        //     }
+        //   }
+        //   });
+        // }
+        // eventTest3.forEach((element) {
+        //   tempApps.forEach((App app) {
+        //     if (element.packageName.contains(app.listName) && app.monitor) {
+        //       var time = new Duration(
+        //           milliseconds: int.parse(element.totalTimeInForeground));
+        //       app.time = time;
+        //       var overTime;
+        //       if (app.timeLimit - app.time < Duration(minutes: 0)) {
+        //         app.isBroken = true;
+        //       }
+        //       if (app.isBroken) {
+        //         overTime = app.time - app.timeLimit;
+        //       } else {
+        //         overTime = app.timeLimit - app.time;
+        //       }
+        //       app.points = (overTime.inMinutes * 0.2).round();
+        //       if (app.points > 20) {
+        //         app.points = 20;
+        //       } else if (app.points < -20) {
+        //         app.points = -20;
+        //       }
+        //     }
+        //   });
+        // });
         tempApps.forEach((App app) {
           toStore.add(app.toJson());
         });
@@ -134,15 +233,10 @@ class _HomeGridState extends State<HomeGrid> {
   }
 
   double paddingCalc(index) {
-    double padding;
-    if (sum.inMinutes == 0) {
-      padding = 8;
-    } else {
-      padding =
-          ((1 / ((_trackedApps[index].time.inMinutes / sum.inMinutes) * 100)) *
-              200);
-    }
-
+    double padding = ((1 /
+            ((_trackedApps[index].time.inMicroseconds / sum.inMicroseconds) *
+                100)) *
+        200);
     if (padding > 25) {
       padding = 25;
       return padding;
@@ -230,26 +324,19 @@ class _HomeGridState extends State<HomeGrid> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Image.asset(
-            'assets/images/etuLogo.png',
-            height: 150,
-            width: 150,
-          ),
+          Center(child: Image.asset("assets/images/etuLogo.png", height: 155)),
           RichText(
             text: TextSpan(
               text: 'Welcome to ',
               style: TextStyle(
-                fontFamily: 'Quicksand',
-                fontSize: 50,
-                color: Color(0xFF2CA5B5),
+                fontSize: 40,
+                color: Color(0xFF083D77),
               ),
               children: <TextSpan>[
                 TextSpan(
-                  text: 'etu',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                    text: 'etu',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: Color(0xFF083D77))),
                 TextSpan(text: '!'),
               ],
             ),
@@ -257,21 +344,17 @@ class _HomeGridState extends State<HomeGrid> {
           SizedBox(
             height: 20,
           ),
-          Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: 0.0, horizontal: 32.0),
-            child: RichText(
-              textAlign: TextAlign.center,
-              text: TextSpan(
-                text: 'Click on the ',
-                style: DefaultTextStyle.of(context).style,
-                children: <TextSpan>[
-                  TextSpan(
-                      text: 'Settings',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                  TextSpan(text: ' page to choose which apps to track!'),
-                ],
-              ),
+          RichText(
+            textAlign: TextAlign.center,
+            text: TextSpan(
+              text: 'Click on the ',
+              style: DefaultTextStyle.of(context).style,
+              children: <TextSpan>[
+                TextSpan(
+                    text: 'Settings',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+                TextSpan(text: ' page to choose which apps to track!'),
+              ],
             ),
           ),
         ],

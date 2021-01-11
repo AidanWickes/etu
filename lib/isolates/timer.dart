@@ -106,7 +106,7 @@ class CountdownTimer {
                   app.notifications--;
                 } else if (app.time - app.timeLimit > Duration(minutes: 10) &&
                     app.notifications == 1) {
-                  var message = "10 minutes over on" + currentApp;
+                  var message = "10 minutes over on " + currentApp;
                   notificationPlugin.showNotification(message);
                   app.notifications--;
                 }
